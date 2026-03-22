@@ -16,14 +16,14 @@ namespace CoordinateRegistration.Application.JwtAuthentication
             _jwtSettings = jwtSettings;
         }
 
-        public string GenerationToken(User user)
+        public string GenerationToken(Person person)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtSettings.SecretKey);
 
             var rolesUser = new List<string>();
 
-            foreach (var item in user.Profile)
+            foreach (var item in person.Profile)
             {
                 rolesUser.Add(item.Profile.Name);
 
@@ -31,9 +31,9 @@ namespace CoordinateRegistration.Application.JwtAuthentication
 
             var claims = new List<Claim>
             {
-                new Claim("Hash", user.Hash.ToString()),
-                new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim("Hash", person.Hash.ToString()),
+                new Claim(ClaimTypes.Name, person.Name),
+                new Claim(ClaimTypes.Email, person.Email)
             };
 
             claims.AddRange(rolesUser.Select(role => new Claim(ClaimTypes.Role, role)));

@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using CoordinateRegistration.Application.Dto;
+using CoordinateRegistration.Application.Dto.Marker;
+using CoordinateRegistration.Application.Dto.Review;
 using CoordinateRegistration.Application.Dto.TypeOccurrence;
 using CoordinateRegistration.Application.Interface;
 using CoordinateRegistration.Application.Interface.Authenticate;
@@ -16,31 +18,33 @@ namespace CoordinateRegistration.Application.Services
         private readonly IAllRespository _allRepository;
         private readonly IValidator<TypeOccurrenceAddDto> _typeOccurrenceAddValidator;
         private readonly IValidator<TypeOccurrencePutDto> _typeOccurrencePutValidator;
-        private readonly IUserAuthenticationService _userAuthenticatedService;
+        private readonly IPersonAuthenticationService _personAuthenticatedService;
         private readonly IMapper _mapper;
 
-        public TypeOccurrenceService(ITypeOccurrenceRespository typeOccurrenceRepository, IMapper mapper, IValidator<TypeOccurrenceAddDto> typeOccurrenceAddValidator, IAllRespository allRepository, IValidator<TypeOccurrencePutDto> typeOccurrencePutValidator, IUserAuthenticationService userAuthenticatedService)
+        public TypeOccurrenceService(ITypeOccurrenceRespository typeOccurrenceRepository, IMapper mapper, IValidator<TypeOccurrenceAddDto> typeOccurrenceAddValidator, IAllRespository allRepository, IValidator<TypeOccurrencePutDto> typeOccurrencePutValidator, IPersonAuthenticationService personAuthenticatedService)
         {
             _typeOccurrenceRepository = typeOccurrenceRepository;
             _mapper = mapper;
             _typeOccurrenceAddValidator = typeOccurrenceAddValidator;
             _allRepository = allRepository;
             _typeOccurrencePutValidator = typeOccurrencePutValidator;
-            _userAuthenticatedService = userAuthenticatedService;
+            _personAuthenticatedService = personAuthenticatedService;
         }
         public async Task<ServiceResult<IEnumerable<TypeOccurrenceDto>>> GetAllTypeOccurrence()
         {
             try
             {
                 var typeOccurrences = await _typeOccurrenceRepository.GetAll();
-                return ServiceResult<IEnumerable<TypeOccurrenceDto>>.SucessResult(_mapper.Map<IEnumerable<TypeOccurrenceDto>>(typeOccurrences));
+                if (!typeOccurrences.Any()) return ServiceResult<IEnumerable<TypeOccurrenceDto>>.SucessResult(_mapper.Map<IEnumerable<TypeOccurrenceDto>>(typeOccurrences), 204);
+                return ServiceResult<IEnumerable<TypeOccurrenceDto>>.SucessResult(_mapper.Map<IEnumerable<TypeOccurrenceDto>>(typeOccurrences),200);
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                Console.WriteLine($"ERRO: {ex.Message}");
+                return ServiceResult<IEnumerable<TypeOccurrenceDto>>.FailResult("Ocorreu um erro inesperado.", 500);
             }
         }
-        public async Task<ServiceResult<IEnumerable<TypeOccurrenceDtoUser>>> GetAllTypeOccurrenceFilter()
+        public async Task<ServiceResult<IEnumerable<TypeOccurrenceDtoPerson>>> GetAllTypeOccurrenceFilter()
         {
             try
             {
@@ -48,20 +52,24 @@ namespace CoordinateRegistration.Application.Services
 
                 typeOccurrences = typeOccurrences.Where(x => x.Active.Equals(true));
 
-                return ServiceResult<IEnumerable<TypeOccurrenceDtoUser>>.SucessResult(_mapper.Map<IEnumerable<TypeOccurrenceDtoUser>>(typeOccurrences));
+                if(!typeOccurrences.Any()) return ServiceResult<IEnumerable<TypeOccurrenceDtoPerson>>.SucessResult(_mapper.Map<IEnumerable<TypeOccurrenceDtoPerson>>(typeOccurrences), 204);
+
+                return ServiceResult<IEnumerable<TypeOccurrenceDtoPerson>>.SucessResult(_mapper.Map<IEnumerable<TypeOccurrenceDtoPerson>>(typeOccurrences), 200);
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                Console.WriteLine($"ERRO: {ex.Message}");
+                return ServiceResult<IEnumerable<TypeOccurrenceDtoPerson>>.FailResult("Ocorreu um erro inesperado.", 500);
             }
         }
         public async Task<ServiceResult<IEnumerable<TypeOccurrenceDto>>> PostTypeOccurrences(IEnumerable<TypeOccurrenceAddDto> model)
         {         
             try
             {
-                var userAuthenticaded = await _userAuthenticatedService.GetUserAuthenticated();
-                if (userAuthenticaded == null || userAuthenticaded.Active == false) return ServiceResult<IEnumerable<TypeOccurrenceDto>>.FailResult("Você não possui autorização para realizar esta operação");
+                if (model == null) return ServiceResult<IEnumerable<TypeOccurrenceDto>>.FailResult("O Json está mal formatado.", 400);
 
+                var personAuthenticaded = await _personAuthenticatedService.GetPersonAuthenticated();
+                if (personAuthenticaded == null || personAuthenticaded.Active == false) return ServiceResult<IEnumerable<TypeOccurrenceDto>>.FailResult("Você não possui autorização para realizar esta operação", 401);
 
                 var validations = new List<ValidationResult>();
                 var typeOccurrences = new List<TypeOccurrence>();
@@ -74,13 +82,13 @@ namespace CoordinateRegistration.Application.Services
                 }
 
                 if (validations.Any()) return ServiceResult<IEnumerable<TypeOccurrenceDto>>
-                        .FailResult("Ocorreram vários erros de preenchimento");//to do
+                        .FailResult("Ocorreram vários erros de preenchimento", 400);//to do
                
 
                 foreach (var item in model)
                 {
                     var typeOccurrence = _mapper.Map<TypeOccurrence>(item);
-                    typeOccurrence.UserId = userAuthenticaded.Id;
+                    typeOccurrence.PersonId = personAuthenticaded.Id;
                     typeOccurrences.Add(typeOccurrence);
                     _allRepository.Add(typeOccurrence);
                 }
@@ -89,35 +97,37 @@ namespace CoordinateRegistration.Application.Services
 
                 var typesOccurrences = await _typeOccurrenceRepository.GetByHashes(typeOccurrences);
 
-                return ServiceResult<IEnumerable<TypeOccurrenceDto>>.SucessResult(_mapper.Map<IEnumerable<TypeOccurrenceDto>>(typesOccurrences));
+                return ServiceResult<IEnumerable<TypeOccurrenceDto>>.SucessResult(_mapper.Map<IEnumerable<TypeOccurrenceDto>>(typesOccurrences), 201);
 
             }
             catch (Exception ex)
             {
-
-                throw new Exception(ex.Message);
+                Console.WriteLine($"ERRO: {ex.Message}");
+                return ServiceResult<IEnumerable<TypeOccurrenceDto>>.FailResult("Ocorreu um erro inesperado.", 500);
             }
         }
         public async Task<ServiceResult<TypeOccurrenceDto>> DeleteTypeOccurrence(Guid hash)
         {
             try
             {
-                var userAuthenticaded = await _userAuthenticatedService.GetUserAuthenticated();
-                if (userAuthenticaded == null || userAuthenticaded.Active == false) return ServiceResult<TypeOccurrenceDto>.FailResult("Você não possui autorização para realizar esta operação");
+                if (hash == Guid.Empty) return ServiceResult<TypeOccurrenceDto>.FailResult("O hash não foi preenchido", 400);
+
+                var personAuthenticaded = await _personAuthenticatedService.GetPersonAuthenticated();
+                if (personAuthenticaded == null || personAuthenticaded.Active == false) return ServiceResult<TypeOccurrenceDto>.FailResult("Você não possui autorização para realizar esta operação", 401);
 
                 var typeOccurrence = await ValidatorTypeOccurrence(hash);
 
-                if (typeOccurrence == null) return ServiceResult<TypeOccurrenceDto>.FailResult("O tipo de ocorrência não foi encontrado na base de dados.");
+                if (typeOccurrence == null) return ServiceResult<TypeOccurrenceDto>.FailResult("O tipo de ocorrência não foi encontrado na base de dados.", 404);
 
                 _allRepository.Delete(typeOccurrence);
                 await _allRepository.SaveChangesAsync();
 
-                return ServiceResult<TypeOccurrenceDto>.SucessResult();
+                return ServiceResult<TypeOccurrenceDto>.SucessResult(200);
             }
             catch (Exception ex)
             {
-
-                throw new Exception(ex.Message);
+                Console.WriteLine($"ERRO: {ex.Message}");
+                return ServiceResult<TypeOccurrenceDto>.FailResult("Ocorreu um erro inesperado.", 500);
             }
 
         }
@@ -125,17 +135,19 @@ namespace CoordinateRegistration.Application.Services
         {
             try
             {
-                var userAuthenticaded = await _userAuthenticatedService.GetUserAuthenticated();
-                if (userAuthenticaded == null || userAuthenticaded.Active == false) return ServiceResult<TypeOccurrenceDto>.FailResult("Você não possui autorização para realizar esta operação");
+                if (hash == Guid.Empty) return ServiceResult<TypeOccurrenceDto>.FailResult("O hash não foi preenchido", 400);
+
+                var personAuthenticaded = await _personAuthenticatedService.GetPersonAuthenticated();
+                if (personAuthenticaded == null || personAuthenticaded.Active == false) return ServiceResult<TypeOccurrenceDto>.FailResult("Você não possui autorização para realizar esta operação", 401);
 
                 var typeOccurrence = await ValidatorTypeOccurrence(hash);
-                if (typeOccurrence == null) return ServiceResult<TypeOccurrenceDto>.FailResult("O tipo de ocorrência não foi encontrado na base de dados.");
-                return ServiceResult<TypeOccurrenceDto>.SucessResult(_mapper.Map<TypeOccurrenceDto>(typeOccurrence));
+                if (typeOccurrence == null) return ServiceResult<TypeOccurrenceDto>.FailResult("O tipo de ocorrência não foi encontrado na base de dados.", 404);
+                return ServiceResult<TypeOccurrenceDto>.SucessResult(_mapper.Map<TypeOccurrenceDto>(typeOccurrence), 200);
             }
             catch (Exception ex)
             {
-
-                throw new Exception(ex.Message);
+                Console.WriteLine($"ERRO: {ex.Message}");
+                return ServiceResult<TypeOccurrenceDto>.FailResult("Ocorreu um erro inesperado.", 500);
             }
 
         }
@@ -143,23 +155,25 @@ namespace CoordinateRegistration.Application.Services
         {
             try
             {
-                var userAuthenticaded = await _userAuthenticatedService.GetUserAuthenticated();
-                if (userAuthenticaded == null || userAuthenticaded.Active == false) return ServiceResult<TypeOccurrenceDto>.FailResult("Você não possui autorização para realizar esta operação");
+                if (model == null) return ServiceResult<TypeOccurrenceDto>.FailResult("O Json está mal formatado.", 400);
+
+                var personAuthenticaded = await _personAuthenticatedService.GetPersonAuthenticated();
+                if (personAuthenticaded == null || personAuthenticaded.Active == false) return ServiceResult<TypeOccurrenceDto>.FailResult("Você não possui autorização para realizar esta operação", 401);
 
                 var result = await _typeOccurrencePutValidator.ValidateAsync(model);
-                if (!result.IsValid) return ServiceResult<TypeOccurrenceDto>.FailResult(result);
+                if (!result.IsValid) return ServiceResult<TypeOccurrenceDto>.FailResult(result, 400);
 
                 var typeOccurrence = await ValidatorTypeOccurrence(model.Hash);
-                if (typeOccurrence == null) return ServiceResult<TypeOccurrenceDto>.FailResult("O tipo de ocorrência não foi encontrado na base de dados.");
+                if (typeOccurrence == null) return ServiceResult<TypeOccurrenceDto>.FailResult("O tipo de ocorrência não foi encontrado na base de dados.", 404);
 
                 _mapper.Map(model, typeOccurrence);
 
-                typeOccurrence.UserUpdateId = userAuthenticaded.Id;
+                typeOccurrence.PersonUpdateId = personAuthenticaded.Id;
 
                 if (model.Active == false) 
                 {
                     typeOccurrence.Active = false;
-                    typeOccurrence.UserDeleteId = userAuthenticaded.Id;
+                    typeOccurrence.PersonDeleteId = personAuthenticaded.Id;
                     typeOccurrence.DateDeleted = DateTime.UtcNow;
                 }
 
@@ -169,12 +183,12 @@ namespace CoordinateRegistration.Application.Services
 
                 var typeOccurrenceReturn = await _typeOccurrenceRepository.GetByHash(typeOccurrence.Hash);
 
-                return ServiceResult<TypeOccurrenceDto>.SucessResult(_mapper.Map<TypeOccurrenceDto>(typeOccurrenceReturn));
+                return ServiceResult<TypeOccurrenceDto>.SucessResult(_mapper.Map<TypeOccurrenceDto>(typeOccurrenceReturn), 200);
             }
             catch (Exception ex)
             {
-
-                throw new Exception(ex.Message);
+                Console.WriteLine($"ERRO: {ex.Message}");
+                return ServiceResult<TypeOccurrenceDto>.FailResult("Ocorreu um erro inesperado.", 500);
             }
 
         }

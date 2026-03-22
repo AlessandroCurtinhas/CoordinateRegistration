@@ -16,7 +16,7 @@ namespace CoordinateRegistration.Persistence.Repositories
         public async Task<Comment> GetByHash(Guid hash)
         {
             return _context.Comment
-                .Include(x => x.User)
+                .Include(x => x.Person)
                 .Include(x => x.Marker)
                 .FirstOrDefault(x => x.Hash.Equals(hash));
         }
@@ -24,7 +24,7 @@ namespace CoordinateRegistration.Persistence.Repositories
         public async Task<IEnumerable<Comment>> GetByMarker(Guid hashMarker)
         {
             return _context.Comment
-                .Include(x => x.User)
+                .Include(x => x.Person)
                 .Include(x => x.Marker)
                 .Where(x => x.Marker.Hash.Equals(hashMarker)).ToList();
         }

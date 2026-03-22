@@ -25,100 +25,57 @@ namespace CoordinateRegistration.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllTypeOccurrence()
         {
-            try
-            {
                 var typeOcurrences = await _typeOccurrenceService.GetAllTypeOccurrence();
-                if (!typeOcurrences.Success) return StatusCode(StatusCodes.Status422UnprocessableEntity, typeOcurrences);
-                if (typeOcurrences.Success && typeOcurrences.Data.IsNullOrEmpty()) return this.StatusCode(StatusCodes.Status204NoContent, typeOcurrences);                
-                return StatusCode(StatusCodes.Status200OK, typeOcurrences);
+                if (!typeOcurrences.Success) return StatusCode(typeOcurrences.StatusCode, typeOcurrences);       
+                return StatusCode(typeOcurrences.StatusCode, typeOcurrences);
 
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, ServiceResult<TypeOccurrenceDto>.FailResult(ex.Message));
-            }
         }
 
         [Authorize(Roles = "Admin, User")]
         [HttpGet("/AllTypeOccurrenceFilter")]
         public async Task<IActionResult> GetAllTypeOccurrenceFilter()
         {
-            try
-            {
                 var typeOcurrences = await _typeOccurrenceService.GetAllTypeOccurrenceFilter();
-                if (!typeOcurrences.Success) return StatusCode(StatusCodes.Status422UnprocessableEntity, typeOcurrences);
-                if (typeOcurrences.Success && typeOcurrences.Data.IsNullOrEmpty()) return this.StatusCode(StatusCodes.Status204NoContent, typeOcurrences);
-                return StatusCode(StatusCodes.Status200OK, typeOcurrences);
+                if (!typeOcurrences.Success) return StatusCode(typeOcurrences.StatusCode, typeOcurrences);
+                return StatusCode(typeOcurrences.StatusCode, typeOcurrences);
 
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, ServiceResult<TypeOccurrenceDto>.FailResult(ex.Message));
-            }
         }
 
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> AddTypeOccurrence(IEnumerable<TypeOccurrenceAddDto> model)
         {
-            try
-            {
                 var typeOcurrences = await _typeOccurrenceService.PostTypeOccurrences(model);
-                if (!typeOcurrences.Success) return StatusCode(StatusCodes.Status422UnprocessableEntity, typeOcurrences);           
-                return StatusCode(StatusCodes.Status200OK, typeOcurrences);
+                if (!typeOcurrences.Success) return StatusCode(typeOcurrences.StatusCode, typeOcurrences);           
+                return StatusCode(typeOcurrences.StatusCode, typeOcurrences);
 
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, ServiceResult<TypeOccurrenceDto>.FailResult(ex.Message));
-            }
         }
         [Authorize(Roles = "Admin")]
         [HttpDelete("{hash}")]       
         public async Task<IActionResult> DeleteTypeOccurrence(Guid hash)
         {
-            try
-            {
                 var typeOccurrence = await _typeOccurrenceService.DeleteTypeOccurrence(hash);
-                if (!typeOccurrence.Success) return this.StatusCode(StatusCodes.Status422UnprocessableEntity, typeOccurrence);
-                return this.StatusCode(StatusCodes.Status200OK, typeOccurrence);
-            }
-            catch (Exception ex)
-            {
+                if (!typeOccurrence.Success) return this.StatusCode(typeOccurrence.StatusCode, typeOccurrence);
+                return this.StatusCode(typeOccurrence.StatusCode, typeOccurrence);
 
-                return this.StatusCode(StatusCodes.Status500InternalServerError, ServiceResult<TypeOccurrence>.FailResult(ex.Message));
-            }
         }
         [Authorize(Roles = "Admin")]
         [HttpGet("{hash}")]
         public async Task<IActionResult> GetByHashTypeOccurrence(Guid hash)
         {
-            try
-            {
                 var typeOccurrence = await _typeOccurrenceService.GetByHashTypeOccurrence(hash);
-                if (!typeOccurrence.Success) return this.StatusCode(StatusCodes.Status422UnprocessableEntity, typeOccurrence);
-                return this.StatusCode(StatusCodes.Status200OK, typeOccurrence);
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, ServiceResult<MarkerDto>.FailResult(ex.Message));
-            }
+                if (!typeOccurrence.Success) return this.StatusCode(typeOccurrence.StatusCode, typeOccurrence);
+                return this.StatusCode(typeOccurrence.StatusCode, typeOccurrence);
+
         }
         [Authorize(Roles = "Admin")]
         [HttpPut]
         public async Task<IActionResult> Put(TypeOccurrencePutDto model)
         {
-            try
-            {
                 var typeOccurrence = await _typeOccurrenceService.PutTypeOccurrence(model);
-                if (!typeOccurrence.Success) return this.StatusCode(StatusCodes.Status422UnprocessableEntity, typeOccurrence);
-                return this.StatusCode(StatusCodes.Status200OK, typeOccurrence);
+                if (!typeOccurrence.Success) return this.StatusCode(typeOccurrence.StatusCode, typeOccurrence);
+                return this.StatusCode(typeOccurrence.StatusCode, typeOccurrence);
 
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, ServiceResult<MarkerDto>.FailResult(ex.Message));
-            }
         }
 
     }

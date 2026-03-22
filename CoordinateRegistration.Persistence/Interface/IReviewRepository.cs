@@ -4,9 +4,9 @@ namespace CoordinateRegistration.Persistence.Interface
 {
     public interface IReviewRepository
     {
-        Task<Review> GetByUserMarker(int userId, int markerId);
+        Task<Review> GetByPersonMarker(int personId, int markerId);
         Task<Review> GetByHash(Guid hash);
-        Task<Review> GetByUserMarker(Guid userHash, Guid markerHash);
-        Task<Review> GetByUserMarker(int userid, Guid markerHash);
+        Task<Review> GetByPersonMarker(Guid personHash, Guid markerHash);
+        Task<Review> GetByPersonMarker(int personid, Guid markerHash);
     }
 }

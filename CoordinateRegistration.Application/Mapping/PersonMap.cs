@@ -1,28 +1,28 @@
 ﻿using AutoMapper;
 using CoordinateRegistration.Application.Dto.Authentication;
-using CoordinateRegistration.Application.Dto.User;
+using CoordinateRegistration.Application.Dto.Person;
 using CoordinateRegistration.Domain;
 
 namespace CoordinateRegistration.Application.Mapping
 {
-    public class UserMap : Profile
+    public class PersonMap : Profile
     {
-        public UserMap() 
+        public PersonMap() 
         {
-            CreateMap<User, UserDto>();
-            CreateMap<User, UserAuthenticatedDto>();
+            CreateMap<Person, PersonDto>();
+            CreateMap<Person, PersonAuthenticatedDto>();
 
-            CreateMap<UserAddDto, User>()
+            CreateMap<PersonAddDto, Person>()
                 .ForMember(dest => dest.Hash, opt => opt
                 .MapFrom(src => Guid.NewGuid()))
                 .ForMember(dest => dest.DateCreated, opt => opt
                 .MapFrom(src => DateTime.UtcNow));
 
-            CreateMap<UserPutDto, User>()
+            CreateMap<PersonPutDto, Person>()
                 .ForMember(dest => dest.DateUpdated, opt => opt
                 .MapFrom(src => DateTime.UtcNow));
 
-            CreateMap<UserRecoveryPasswordDto, User>()
+            CreateMap<PersonRecoveryPasswordDto, Person>()
                 .ForMember(dest => dest.DateUpdated, opt => opt
                 .MapFrom(src => DateTime.UtcNow));
 

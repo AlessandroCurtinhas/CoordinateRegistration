@@ -14,21 +14,7 @@ namespace CoordinateRegistration.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ProfileUsr",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Hash = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProfileUsr", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "User",
+                name: "Person",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -46,7 +32,21 @@ namespace CoordinateRegistration.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_User", x => x.Id);
+                    table.PrimaryKey("PK_Person", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProfileUsr",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Hash = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProfileUsr", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -59,7 +59,7 @@ namespace CoordinateRegistration.Persistence.Migrations
                     Lat = table.Column<double>(type: "float", nullable: false),
                     Lng = table.Column<double>(type: "float", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    PersonId = table.Column<int>(type: "int", nullable: false),
                     DateCreated = table.Column<DateTime>(type: "SmallDatetime", nullable: false),
                     DateUpdated = table.Column<DateTime>(type: "SmallDatetime", nullable: true)
                 },
@@ -67,9 +67,9 @@ namespace CoordinateRegistration.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Marker", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Marker_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
+                        name: "FK_Marker_Person_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Person",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -83,9 +83,9 @@ namespace CoordinateRegistration.Persistence.Migrations
                     Hash = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Active = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: true),
-                    UserUpdateId = table.Column<int>(type: "int", nullable: true),
-                    UserDeleteId = table.Column<int>(type: "int", nullable: true),
+                    PersonId = table.Column<int>(type: "int", nullable: true),
+                    PersonUpdateId = table.Column<int>(type: "int", nullable: true),
+                    PersonDeleteId = table.Column<int>(type: "int", nullable: true),
                     DateCreated = table.Column<DateTime>(type: "SmallDatetime", nullable: false),
                     DateUpdated = table.Column<DateTime>(type: "SmallDatetime", nullable: true),
                     DateDeleted = table.Column<DateTime>(type: "SmallDatetime", nullable: true)
@@ -94,45 +94,45 @@ namespace CoordinateRegistration.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_TypeOccurrence", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TypeOccurrence_User_UserDeleteId",
-                        column: x => x.UserDeleteId,
-                        principalTable: "User",
+                        name: "FK_TypeOccurrence_Person_PersonDeleteId",
+                        column: x => x.PersonDeleteId,
+                        principalTable: "Person",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_TypeOccurrence_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
+                        name: "FK_TypeOccurrence_Person_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Person",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_TypeOccurrence_User_UserUpdateId",
-                        column: x => x.UserUpdateId,
-                        principalTable: "User",
+                        name: "FK_TypeOccurrence_Person_PersonUpdateId",
+                        column: x => x.PersonUpdateId,
+                        principalTable: "Person",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserProfile",
+                name: "PersonProfile",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Hash = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    PersonId = table.Column<int>(type: "int", nullable: false),
                     ProfileId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserProfile", x => x.Id);
+                    table.PrimaryKey("PK_PersonProfile", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserProfile_ProfileUsr_ProfileId",
-                        column: x => x.ProfileId,
-                        principalTable: "ProfileUsr",
+                        name: "FK_PersonProfile_Person_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Person",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_UserProfile_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
+                        name: "FK_PersonProfile_ProfileUsr_ProfileId",
+                        column: x => x.ProfileId,
+                        principalTable: "ProfileUsr",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -145,7 +145,7 @@ namespace CoordinateRegistration.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Hash = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MarkerId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: true),
+                    PersonId = table.Column<int>(type: "int", nullable: true),
                     Text = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
                     DateCreated = table.Column<DateTime>(type: "SmallDatetime", nullable: false),
                     DateUpdated = table.Column<DateTime>(type: "SmallDatetime", nullable: true)
@@ -160,9 +160,9 @@ namespace CoordinateRegistration.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Comment_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
+                        name: "FK_Comment_Person_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Person",
                         principalColumn: "Id");
                 });
 
@@ -173,7 +173,7 @@ namespace CoordinateRegistration.Persistence.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Hash = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: true),
+                    PersonId = table.Column<int>(type: "int", nullable: true),
                     MarkerId = table.Column<int>(type: "int", nullable: false),
                     Positive = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     Negative = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
@@ -190,9 +190,9 @@ namespace CoordinateRegistration.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Review_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
+                        name: "FK_Review_Person_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Person",
                         principalColumn: "Id");
                 });
 
@@ -225,23 +225,23 @@ namespace CoordinateRegistration.Persistence.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Person",
+                columns: new[] { "Id", "DateCreated", "DateDeleted", "DateUpdated", "Email", "Hash", "Name", "Password", "PasswordDateRequest", "RecoveryHash" },
+                values: new object[] { 1,"01/01/2025", null, null, "admin@admin.com.br", new Guid("9772edc4-764c-4576-b864-bdd889369bc2"), "Admin", "4de93544234adffbb681ed60ffcfb941", null, null });
+
+            migrationBuilder.InsertData(
                 table: "ProfileUsr",
                 columns: new[] { "Id", "Hash", "Name" },
                 values: new object[,]
                 {
-                    { 1, new Guid("d44a56d9-fe82-4213-9e74-6de492dd3d5e"), "Admin" },
-                    { 2, new Guid("f6052b15-acf4-44ad-996c-fdf90c019404"), "User" }
+                    { 1, new Guid("8abf25ba-cf18-4770-be7a-006c739fcba7"), "Admin" },
+                    { 2, new Guid("4d726080-a763-47c0-b15a-7fca707e00e3"), "User" }
                 });
 
             migrationBuilder.InsertData(
-                table: "User",
-                columns: new[] { "Id", "DateCreated", "DateDeleted", "DateUpdated", "Email", "Hash", "Name", "Password", "PasswordDateRequest", "RecoveryHash" },
-                values: new object[] { 1, "01/01/2025" , null, null, "admin@admin.com.br", new Guid("e8bec31a-ed0c-4762-9011-f4b3d69eb6cc"), "Admin", "0f2797f2182804d0cc7f0b85d254c146", null, null });
-
-            migrationBuilder.InsertData(
-                table: "UserProfile",
-                columns: new[] { "Id", "Hash", "ProfileId", "UserId" },
-                values: new object[] { 1, new Guid("583383e7-4b31-4b1b-9d54-5c5b155b11e3"), 1, 1 });
+                table: "PersonProfile",
+                columns: new[] { "Id", "Hash", "PersonId", "ProfileId" },
+                values: new object[] { 1, new Guid("e3814f9b-e3df-442e-be80-3c79ce26a0c2"), 1, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comment_Hash",
@@ -255,9 +255,9 @@ namespace CoordinateRegistration.Persistence.Migrations
                 column: "MarkerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comment_UserId",
+                name: "IX_Comment_PersonId",
                 table: "Comment",
-                column: "UserId");
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Marker_Hash",
@@ -266,9 +266,9 @@ namespace CoordinateRegistration.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Marker_UserId",
+                name: "IX_Marker_PersonId",
                 table: "Marker",
-                column: "UserId");
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MarkerTypeOccurrence_MarkerId",
@@ -279,6 +279,35 @@ namespace CoordinateRegistration.Persistence.Migrations
                 name: "IX_MarkerTypeOccurrence_TypeOccurrenceId",
                 table: "MarkerTypeOccurrence",
                 column: "TypeOccurrenceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Person_Email",
+                table: "Person",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Person_Hash",
+                table: "Person",
+                column: "Hash",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Person_RecoveryHash",
+                table: "Person",
+                column: "RecoveryHash",
+                unique: true,
+                filter: "[RecoveryHash] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PersonProfile_PersonId",
+                table: "PersonProfile",
+                column: "PersonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PersonProfile_ProfileId",
+                table: "PersonProfile",
+                column: "ProfileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProfileUsr_Hash",
@@ -298,9 +327,9 @@ namespace CoordinateRegistration.Persistence.Migrations
                 column: "MarkerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Review_UserId",
+                name: "IX_Review_PersonId",
                 table: "Review",
-                column: "UserId");
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TypeOccurrence_Hash",
@@ -309,48 +338,19 @@ namespace CoordinateRegistration.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_TypeOccurrence_UserDeleteId",
+                name: "IX_TypeOccurrence_PersonDeleteId",
                 table: "TypeOccurrence",
-                column: "UserDeleteId");
+                column: "PersonDeleteId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TypeOccurrence_UserId",
+                name: "IX_TypeOccurrence_PersonId",
                 table: "TypeOccurrence",
-                column: "UserId");
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TypeOccurrence_UserUpdateId",
+                name: "IX_TypeOccurrence_PersonUpdateId",
                 table: "TypeOccurrence",
-                column: "UserUpdateId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_Email",
-                table: "User",
-                column: "Email",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_Hash",
-                table: "User",
-                column: "Hash",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_User_RecoveryHash",
-                table: "User",
-                column: "RecoveryHash",
-                unique: true,
-                filter: "[RecoveryHash] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserProfile_ProfileId",
-                table: "UserProfile",
-                column: "ProfileId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserProfile_UserId",
-                table: "UserProfile",
-                column: "UserId");
+                column: "PersonUpdateId");
         }
 
         /// <inheritdoc />
@@ -363,22 +363,22 @@ namespace CoordinateRegistration.Persistence.Migrations
                 name: "MarkerTypeOccurrence");
 
             migrationBuilder.DropTable(
-                name: "Review");
+                name: "PersonProfile");
 
             migrationBuilder.DropTable(
-                name: "UserProfile");
+                name: "Review");
 
             migrationBuilder.DropTable(
                 name: "TypeOccurrence");
 
             migrationBuilder.DropTable(
-                name: "Marker");
-
-            migrationBuilder.DropTable(
                 name: "ProfileUsr");
 
             migrationBuilder.DropTable(
-                name: "User");
+                name: "Marker");
+
+            migrationBuilder.DropTable(
+                name: "Person");
         }
     }
 }

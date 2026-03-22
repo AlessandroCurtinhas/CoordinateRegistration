@@ -1,6 +1,6 @@
 ﻿namespace CoordinateRegistration.Domain
 {
-    public class User
+    public class Person
     {
         public int Id { get; set; }
         public Guid Hash { get; set; }
@@ -13,6 +13,6 @@
         public DateTime DateCreated { get; set; }
         public DateTime? DateUpdated { get; set; }
         public DateTime? DateDeleted { get; set; }
-        public IEnumerable<UserProfile> Profile { get; set; }
+        public IEnumerable<PersonProfile> Profile { get; set; }
     }
 }

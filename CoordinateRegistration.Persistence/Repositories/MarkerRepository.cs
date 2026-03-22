@@ -19,7 +19,7 @@ namespace CoordinateRegistration.Persistence.Repositories
             return await _context.Marker
                 .OrderByDescending(m => m.DateCreated)
                 .Include(m => m.Reviews)
-                .Include(m => m.User)
+                .Include(m => m.Person)
                 .Include(x => x.MarkerTypeOccurrences.Where(i => i.TypeOccurrence.Active == true))
                     .ThenInclude(x => x.TypeOccurrence)
                 .ToListAsync();
@@ -28,7 +28,7 @@ namespace CoordinateRegistration.Persistence.Repositories
         public async Task<Marker> GetByHash(Guid hash)
         {
             return await _context.Marker
-                .Include(x => x.User)
+                .Include(x => x.Person)
                 .Include(m => m.Reviews)
                 .Include(x => x.MarkerTypeOccurrences)
                     .ThenInclude(x => x.TypeOccurrence)

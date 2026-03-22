@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace CoordinateRegistration.Persistence.Mappings
 {
-    public class UserMap : IEntityTypeConfiguration<User>
+    public class PersonMap : IEntityTypeConfiguration<Person>
     {
-        public void Configure(EntityTypeBuilder<User> builder)
+        public void Configure(EntityTypeBuilder<Person> builder)
         {
             builder.HasKey(x => x.Id);
 

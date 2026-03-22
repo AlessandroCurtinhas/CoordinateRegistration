@@ -10,7 +10,7 @@ namespace CoordinateRegistration.Application.Interface
         Task<ServiceResult<TypeOccurrenceDto>> DeleteTypeOccurrence(Guid hash);
         Task<ServiceResult<TypeOccurrenceDto>> GetByHashTypeOccurrence(Guid hash);
         Task<ServiceResult<TypeOccurrenceDto>> PutTypeOccurrence(TypeOccurrencePutDto model);
-        Task<ServiceResult<IEnumerable<TypeOccurrenceDtoUser>>> GetAllTypeOccurrenceFilter();
+        Task<ServiceResult<IEnumerable<TypeOccurrenceDtoPerson>>> GetAllTypeOccurrenceFilter();
 
     }
 }

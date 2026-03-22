@@ -19,9 +19,9 @@ namespace CoordinateRegistration.Persistence.Repositories
         {
             return await _context.TypeOccurrence
                 .AsNoTracking()
-                .Include(x => x.UserCreate)
-                .Include(x => x.UserUpdate)
-                .Include(x => x.UserDelete)
+                .Include(x => x.PersonCreate)
+                .Include(x => x.PersonUpdate)
+                .Include(x => x.PersonDelete)
                 .ToListAsync();          
         }
 
@@ -31,9 +31,9 @@ namespace CoordinateRegistration.Persistence.Repositories
 
             return await _context.TypeOccurrence
                 .AsNoTracking()
-                .Include(x => x.UserCreate)
-                .Include(x => x.UserUpdate)
-                .Include(x => x.UserDelete)
+                .Include(x => x.PersonCreate)
+                .Include(x => x.PersonUpdate)
+                .Include(x => x.PersonDelete)
                 .Where(p => hashes.Contains(p.Hash))
                 .ToListAsync();
         }
@@ -51,9 +51,9 @@ namespace CoordinateRegistration.Persistence.Repositories
         {
             return await _context.TypeOccurrence
                 .AsNoTracking()
-                .Include(x => x.UserCreate)
-                .Include(x => x.UserUpdate)
-                .Include(x => x.UserDelete)
+                .Include(x => x.PersonCreate)
+                .Include(x => x.PersonUpdate)
+                .Include(x => x.PersonDelete)
                 .Where(x => x.Equals(ids))
                 .ToListAsync();
         }
@@ -62,9 +62,9 @@ namespace CoordinateRegistration.Persistence.Repositories
         {
             return await _context.TypeOccurrence
                 .AsNoTracking()
-                .Include(x => x.UserCreate)
-                .Include(x => x.UserUpdate)
-                .Include(x => x.UserDelete)
+                .Include(x => x.PersonCreate)
+                .Include(x => x.PersonUpdate)
+                .Include(x => x.PersonDelete)
                 .FirstOrDefaultAsync(x => x.Hash == hash);
         }
     }

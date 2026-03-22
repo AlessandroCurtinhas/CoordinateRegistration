@@ -1,6 +1,6 @@
-﻿namespace CoordinateRegistration.Application.Dto.User
+﻿namespace CoordinateRegistration.Application.Dto.Person
 {
-    public class UserDeleteDto
+    public class PersonDeleteDto
     {
         public string Password { get; set; }
         public string ConfirmedPassword { get; set; }

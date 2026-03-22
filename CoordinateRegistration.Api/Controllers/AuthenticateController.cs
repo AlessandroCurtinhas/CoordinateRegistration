@@ -1,6 +1,4 @@
-﻿using CoordinateRegistration.Application.Dto.Marker;
-using CoordinateRegistration.Application.Dto;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using CoordinateRegistration.Application.Interface.Authenticate;
 using CoordinateRegistration.Application.Dto.Authentication;
@@ -10,59 +8,42 @@ namespace CoordinateRegistration.Controllers
     public class AuthenticateController : Controller
     {
         
-        private readonly IUserAuthenticationService _userAuthenticatedService;
+        private readonly IPersonAuthenticationService _personAuthenticatedService;
 
-        public AuthenticateController(IUserAuthenticationService userAuthenticatedService)
+        public AuthenticateController(IPersonAuthenticationService personAuthenticatedService)
         {
-            _userAuthenticatedService = userAuthenticatedService;
+            _personAuthenticatedService = personAuthenticatedService;
         }
 
         [HttpPost("/login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login(UserLoginDto model)
+        public async Task<IActionResult> Login([FromBody] PersonLoginDto model)
         {
-            try
-            {
-                var token = await _userAuthenticatedService.Login(model);
-                if (!token.Success) return this.StatusCode(StatusCodes.Status422UnprocessableEntity, token);
-                return this.StatusCode(StatusCodes.Status200OK, token);
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, ServiceResult<MarkerDto>.FailResult(ex.Message));
-            }
+                var token = await _personAuthenticatedService.Login(model);
+                if (!token.Success) return this.StatusCode(token.StatusCode,token);
+                return this.StatusCode(token.StatusCode, token);
+
         }
 
         [HttpPost("/recoveryPasswordRequest")]
         [AllowAnonymous]
-        public async Task<IActionResult> RecoveryPasswordRequest(UserRecoveryRequestDto model)
+        public async Task<IActionResult> RecoveryPasswordRequest([FromBody] PersonRecoveryRequestDto model)
         {
-            try
-            {
-                var token = await _userAuthenticatedService.RecoveryPasswordRequest(model);
-                if (!token.Success) return this.StatusCode(StatusCodes.Status422UnprocessableEntity, token);
-                return this.StatusCode(StatusCodes.Status200OK, token);
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, ServiceResult<MarkerDto>.FailResult(ex.Message));
-            }
+                var token = await _personAuthenticatedService.RecoveryPasswordRequest(model);
+                if (!token.Success) return this.StatusCode(token.StatusCode, token);
+                return this.StatusCode(token.StatusCode, token);
+
         }
 
         [HttpPost("/recoveryPassword")]
         [AllowAnonymous]
-        public async Task<IActionResult> RecoveryPassword(Guid hashRecovery, UserRecoveryPasswordDto model)
+        public async Task<IActionResult> RecoveryPassword([FromBody] PersonRecoveryPasswordDto model)
         {
-            try
-            {
-                var user = await _userAuthenticatedService.RecoveryPassword(hashRecovery, model);
-                if (!user.Success) return this.StatusCode(StatusCodes.Status422UnprocessableEntity, user);
-                return this.StatusCode(StatusCodes.Status200OK, user);
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, ServiceResult<MarkerDto>.FailResult(ex.Message));
-            }
+
+                var user = await _personAuthenticatedService.RecoveryPassword(model);
+                if (!user.Success) return this.StatusCode(user.StatusCode, user);
+                return this.StatusCode(user.StatusCode, user);
+
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace CoordinateRegistration.Application.Dto.User
+﻿namespace CoordinateRegistration.Application.Dto.Person
 {
-    public class UserDto
+    public class PersonDto
     {
         public Guid Hash { get; set; }
         public string Name { get; set; }

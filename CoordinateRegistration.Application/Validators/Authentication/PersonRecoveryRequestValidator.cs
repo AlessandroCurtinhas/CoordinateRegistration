@@ -3,16 +3,16 @@ using FluentValidation;
 
 namespace CoordinateRegistration.Application.Validators.Authentication
 {
-    public class UserRecoveryRequestValidator : AbstractValidator<UserRecoveryRequestDto>
+    public class PersonRecoveryRequestValidator : AbstractValidator<PersonRecoveryRequestDto>
     {
-        public UserRecoveryRequestValidator()
+        public PersonRecoveryRequestValidator()
         {
             RuleFor(x => x.Email)
                 .NotEmpty()
                 .WithMessage("O email deve ser preenchido.")
-                .MinimumLength(5)
+                .MinimumLength(3)
                 .MaximumLength(150)
-                .EmailAddress();
+                .EmailAddress().WithMessage("O email informado é inválido.");
         }
     }
 }

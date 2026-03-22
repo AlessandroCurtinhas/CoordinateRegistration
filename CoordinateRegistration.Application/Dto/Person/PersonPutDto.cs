@@ -1,6 +1,6 @@
-﻿namespace CoordinateRegistration.Application.Dto.User
+﻿namespace CoordinateRegistration.Application.Dto.Person
 {
-    public class UserPutDto
+    public class PersonPutDto
     {
         public string Name { get; set; }
         public string Email { get; set; }

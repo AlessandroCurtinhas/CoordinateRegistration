@@ -4,7 +4,7 @@
     {
         public Guid Hash { get; set; }
         public Guid MarkerHash { get; set; }
-        public string? UserName { get; set; }
+        public string? PersonName { get; set; }
         public bool? Positive { get; set; }
         public bool? Negative { get; set; }
         public DateTime DateCreated { get; set; }

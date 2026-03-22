@@ -6,17 +6,17 @@
         public Guid Hash { get; set; }
         public bool Active { get; set; }
         public string Name { get; set; }
-        public int? UserId { get; set; }
-        public int? UserUpdateId { get; set; }
-        public int? UserDeleteId { get; set; }
+        public int? PersonId { get; set; }
+        public int? PersonUpdateId { get; set; }
+        public int? PersonDeleteId { get; set; }
         public IEnumerable<MarkerTypeOccurrence> MarkerTypeOccurrences { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateUpdated { get; set; }
         public DateTime? DateDeleted { get; set; }
 
-        public User? UserCreate { get; set; }
-        public User? UserUpdate { get; set; }
-        public User? UserDelete { get; set; }
+        public Person? PersonCreate { get; set; }
+        public Person? PersonUpdate { get; set; }
+        public Person? PersonDelete { get; set; }
 
 
     }

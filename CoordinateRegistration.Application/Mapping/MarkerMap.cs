@@ -11,8 +11,8 @@ namespace CoordinateRegistration.Application.Mapping
             CreateMap<Marker, MarkerDto>()
               .ForMember(e => e.TypeOcurrences, opts => opts
               .MapFrom(e => e.MarkerTypeOccurrences.Select(e => new MarkerDtoTypeOccurrence { Hash = e.TypeOccurrence.Hash, Name =  e.TypeOccurrence.Name })))          
-              .ForMember(dest => dest.UserName, opts => opts
-              .MapFrom(src => src.User.Name))
+              .ForMember(dest => dest.PersonName, opts => opts
+              .MapFrom(src => src.Person.Name))
               .ForMember(dest => dest.PositiveTotal, opts => opts
               .MapFrom(src => src.Reviews.Count(x => x.Positive == true)))
               .ForMember(dest => dest.PositivePercentual, opts => opts

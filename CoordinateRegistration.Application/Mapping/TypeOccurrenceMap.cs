@@ -9,18 +9,18 @@ namespace CoordinateRegistration.Application.Mapping
         public TypeOccurrenceMap() {
 
             CreateMap<TypeOccurrence, TypeOccurrenceDto>()
-                .ForMember(dest => dest.UserNameCreated, opt => opt
-                .MapFrom(src => src.UserCreate.Name))
-                .ForMember(dest => dest.UserNameUpdated, opt => opt
-                .MapFrom(src => src.UserUpdate.Name))
-                .ForMember(dest => dest.UserNameDeleted, opt => opt
-                .MapFrom(src => src.UserDelete.Name));
+                .ForMember(dest => dest.PersonNameCreated, opt => opt
+                .MapFrom(src => src.PersonCreate.Name))
+                .ForMember(dest => dest.PersonNameUpdated, opt => opt
+                .MapFrom(src => src.PersonUpdate.Name))
+                .ForMember(dest => dest.PersonNameDeleted, opt => opt
+                .MapFrom(src => src.PersonDelete.Name));
 
-            CreateMap<TypeOccurrence, TypeOccurrenceDtoUser>()
-                .ForMember(dest => dest.UserNameCreated, opt => opt
-                .MapFrom(src => src.UserCreate.Name))
-                .ForMember(dest => dest.UserNameUpdated, opt => opt
-                .MapFrom(src => src.UserUpdate.Name));
+            CreateMap<TypeOccurrence, TypeOccurrenceDtoPerson>()
+                .ForMember(dest => dest.PersonNameCreated, opt => opt
+                .MapFrom(src => src.PersonCreate.Name))
+                .ForMember(dest => dest.PersonNameUpdated, opt => opt
+                .MapFrom(src => src.PersonUpdate.Name));
 
 
             CreateMap<TypeOccurrencePutDto, TypeOccurrence>()

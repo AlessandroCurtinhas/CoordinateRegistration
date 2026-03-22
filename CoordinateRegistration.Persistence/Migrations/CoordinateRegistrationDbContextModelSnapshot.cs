@@ -42,13 +42,13 @@ namespace CoordinateRegistration.Persistence.Migrations
                     b.Property<int>("MarkerId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PersonId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -57,7 +57,7 @@ namespace CoordinateRegistration.Persistence.Migrations
 
                     b.HasIndex("MarkerId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("PersonId");
 
                     b.ToTable("Comment");
                 });
@@ -90,7 +90,7 @@ namespace CoordinateRegistration.Persistence.Migrations
                     b.Property<double>("Lng")
                         .HasColumnType("float");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("PersonId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -98,7 +98,7 @@ namespace CoordinateRegistration.Persistence.Migrations
                     b.HasIndex("Hash")
                         .IsUnique();
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("PersonId");
 
                     b.ToTable("Marker");
                 });
@@ -132,143 +132,7 @@ namespace CoordinateRegistration.Persistence.Migrations
                     b.ToTable("MarkerTypeOccurrence");
                 });
 
-            modelBuilder.Entity("CoordinateRegistration.Domain.ProfileUsr", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<Guid>("Hash")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Hash")
-                        .IsUnique();
-
-                    b.ToTable("ProfileUsr");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Hash = new Guid("d44a56d9-fe82-4213-9e74-6de492dd3d5e"),
-                            Name = "Admin"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Hash = new Guid("f6052b15-acf4-44ad-996c-fdf90c019404"),
-                            Name = "User"
-                        });
-                });
-
-            modelBuilder.Entity("CoordinateRegistration.Domain.Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("SmallDatetime");
-
-                    b.Property<DateTime?>("DateUpdated")
-                        .HasColumnType("SmallDatetime");
-
-                    b.Property<Guid>("Hash")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("MarkerId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Negative")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<bool>("Positive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Hash")
-                        .IsUnique();
-
-                    b.HasIndex("MarkerId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Review");
-                });
-
-            modelBuilder.Entity("CoordinateRegistration.Domain.TypeOccurrence", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Active")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("SmallDatetime");
-
-                    b.Property<DateTime?>("DateDeleted")
-                        .HasColumnType("SmallDatetime");
-
-                    b.Property<DateTime?>("DateUpdated")
-                        .HasColumnType("SmallDatetime");
-
-                    b.Property<Guid>("Hash")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int?>("UserDeleteId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserUpdateId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Hash")
-                        .IsUnique();
-
-                    b.HasIndex("UserDeleteId");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("UserUpdateId");
-
-                    b.ToTable("TypeOccurrence");
-                });
-
-            modelBuilder.Entity("CoordinateRegistration.Domain.User", b =>
+            modelBuilder.Entity("CoordinateRegistration.Domain.Person", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -326,7 +190,7 @@ namespace CoordinateRegistration.Persistence.Migrations
                         .IsUnique()
                         .HasFilter("[RecoveryHash] IS NOT NULL");
 
-                    b.ToTable("User");
+                    b.ToTable("Person");
 
                     b.HasData(
                         new
@@ -335,13 +199,13 @@ namespace CoordinateRegistration.Persistence.Migrations
                             Active = false,
                             DateCreated = new DateTime(2025, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "admin@admin.com.br",
-                            Hash = new Guid("e8bec31a-ed0c-4762-9011-f4b3d69eb6cc"),
+                            Hash = new Guid("9772edc4-764c-4576-b864-bdd889369bc2"),
                             Name = "Admin",
-                            Password = "0f2797f2182804d0cc7f0b85d254c146"
+                            Password = "4de93544234adffbb681ed60ffcfb941"
                         });
                 });
 
-            modelBuilder.Entity("CoordinateRegistration.Domain.UserProfile", b =>
+            modelBuilder.Entity("CoordinateRegistration.Domain.PersonProfile", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -352,28 +216,164 @@ namespace CoordinateRegistration.Persistence.Migrations
                     b.Property<Guid>("Hash")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("ProfileId")
+                    b.Property<int>("PersonId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
+                    b.Property<int>("ProfileId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PersonId");
+
                     b.HasIndex("ProfileId");
 
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserProfile");
+                    b.ToTable("PersonProfile");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            Hash = new Guid("583383e7-4b31-4b1b-9d54-5c5b155b11e3"),
-                            ProfileId = 1,
-                            UserId = 1
+                            Hash = new Guid("e3814f9b-e3df-442e-be80-3c79ce26a0c2"),
+                            PersonId = 1,
+                            ProfileId = 1
                         });
+                });
+
+            modelBuilder.Entity("CoordinateRegistration.Domain.ProfileUsr", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<Guid>("Hash")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Hash")
+                        .IsUnique();
+
+                    b.ToTable("ProfileUsr");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Hash = new Guid("8abf25ba-cf18-4770-be7a-006c739fcba7"),
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Hash = new Guid("4d726080-a763-47c0-b15a-7fca707e00e3"),
+                            Name = "User"
+                        });
+                });
+
+            modelBuilder.Entity("CoordinateRegistration.Domain.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("SmallDatetime");
+
+                    b.Property<DateTime?>("DateUpdated")
+                        .HasColumnType("SmallDatetime");
+
+                    b.Property<Guid>("Hash")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("MarkerId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Negative")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<int?>("PersonId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Positive")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Hash")
+                        .IsUnique();
+
+                    b.HasIndex("MarkerId");
+
+                    b.HasIndex("PersonId");
+
+                    b.ToTable("Review");
+                });
+
+            modelBuilder.Entity("CoordinateRegistration.Domain.TypeOccurrence", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true);
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("SmallDatetime");
+
+                    b.Property<DateTime?>("DateDeleted")
+                        .HasColumnType("SmallDatetime");
+
+                    b.Property<DateTime?>("DateUpdated")
+                        .HasColumnType("SmallDatetime");
+
+                    b.Property<Guid>("Hash")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("PersonDeleteId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PersonId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("PersonUpdateId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Hash")
+                        .IsUnique();
+
+                    b.HasIndex("PersonDeleteId");
+
+                    b.HasIndex("PersonId");
+
+                    b.HasIndex("PersonUpdateId");
+
+                    b.ToTable("TypeOccurrence");
                 });
 
             modelBuilder.Entity("CoordinateRegistration.Domain.Comment", b =>
@@ -384,24 +384,24 @@ namespace CoordinateRegistration.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoordinateRegistration.Domain.User", "User")
+                    b.HasOne("CoordinateRegistration.Domain.Person", "Person")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("PersonId");
 
                     b.Navigation("Marker");
 
-                    b.Navigation("User");
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("CoordinateRegistration.Domain.Marker", b =>
                 {
-                    b.HasOne("CoordinateRegistration.Domain.User", "User")
+                    b.HasOne("CoordinateRegistration.Domain.Person", "Person")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("PersonId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("CoordinateRegistration.Domain.MarkerTypeOccurrence", b =>
@@ -423,6 +423,23 @@ namespace CoordinateRegistration.Persistence.Migrations
                     b.Navigation("TypeOccurrence");
                 });
 
+            modelBuilder.Entity("CoordinateRegistration.Domain.PersonProfile", b =>
+                {
+                    b.HasOne("CoordinateRegistration.Domain.Person", null)
+                        .WithMany("Profile")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CoordinateRegistration.Domain.ProfileUsr", "Profile")
+                        .WithMany()
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Profile");
+                });
+
             modelBuilder.Entity("CoordinateRegistration.Domain.Review", b =>
                 {
                     b.HasOne("CoordinateRegistration.Domain.Marker", "Marker")
@@ -431,51 +448,34 @@ namespace CoordinateRegistration.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CoordinateRegistration.Domain.User", "User")
+                    b.HasOne("CoordinateRegistration.Domain.Person", "Person")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("PersonId");
 
                     b.Navigation("Marker");
 
-                    b.Navigation("User");
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("CoordinateRegistration.Domain.TypeOccurrence", b =>
                 {
-                    b.HasOne("CoordinateRegistration.Domain.User", "UserDelete")
+                    b.HasOne("CoordinateRegistration.Domain.Person", "PersonDelete")
                         .WithMany()
-                        .HasForeignKey("UserDeleteId");
+                        .HasForeignKey("PersonDeleteId");
 
-                    b.HasOne("CoordinateRegistration.Domain.User", "UserCreate")
+                    b.HasOne("CoordinateRegistration.Domain.Person", "PersonCreate")
                         .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("PersonId");
 
-                    b.HasOne("CoordinateRegistration.Domain.User", "UserUpdate")
+                    b.HasOne("CoordinateRegistration.Domain.Person", "PersonUpdate")
                         .WithMany()
-                        .HasForeignKey("UserUpdateId");
+                        .HasForeignKey("PersonUpdateId");
 
-                    b.Navigation("UserCreate");
+                    b.Navigation("PersonCreate");
 
-                    b.Navigation("UserDelete");
+                    b.Navigation("PersonDelete");
 
-                    b.Navigation("UserUpdate");
-                });
-
-            modelBuilder.Entity("CoordinateRegistration.Domain.UserProfile", b =>
-                {
-                    b.HasOne("CoordinateRegistration.Domain.ProfileUsr", "Profile")
-                        .WithMany()
-                        .HasForeignKey("ProfileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CoordinateRegistration.Domain.User", null)
-                        .WithMany("Profile")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Profile");
+                    b.Navigation("PersonUpdate");
                 });
 
             modelBuilder.Entity("CoordinateRegistration.Domain.Marker", b =>
@@ -487,14 +487,14 @@ namespace CoordinateRegistration.Persistence.Migrations
                     b.Navigation("Reviews");
                 });
 
+            modelBuilder.Entity("CoordinateRegistration.Domain.Person", b =>
+                {
+                    b.Navigation("Profile");
+                });
+
             modelBuilder.Entity("CoordinateRegistration.Domain.TypeOccurrence", b =>
                 {
                     b.Navigation("MarkerTypeOccurrences");
-                });
-
-            modelBuilder.Entity("CoordinateRegistration.Domain.User", b =>
-                {
-                    b.Navigation("Profile");
                 });
 #pragma warning restore 612, 618
         }

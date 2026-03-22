@@ -1,11 +1,11 @@
-﻿using CoordinateRegistration.Application.Dto.User;
+﻿using CoordinateRegistration.Application.Dto.Person;
 using FluentValidation;
 
-namespace CoordinateRegistration.Application.Validators.User
+namespace CoordinateRegistration.Application.Validators.Person
 {
-    public class UserPutValidator : AbstractValidator<UserPutDto>
+    public class PersonPutValidator : AbstractValidator<PersonPutDto>
     {
-        public UserPutValidator()
+        public PersonPutValidator()
         {
             RuleFor(x => x.Name)
                 .NotEmpty()

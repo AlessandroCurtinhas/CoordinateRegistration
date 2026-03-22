@@ -1,6 +1,8 @@
-﻿using CoordinateRegistration.Application.Dto;
+﻿using AutoMapper;
+using CoordinateRegistration.Application.Dto;
 using CoordinateRegistration.Application.Dto.Marker;
 using CoordinateRegistration.Application.Interface;
+using CoordinateRegistration.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -20,75 +22,42 @@ namespace CoordinateRegistration.Controllers
         [HttpPost]
         public async Task<IActionResult> Post(MarkerAddDto model)
         {
-            try
-            {
                 var marker = await _markerService.AddMarker(model);
-                if (!marker.Success) return this.StatusCode(StatusCodes.Status422UnprocessableEntity, marker);
-                return this.StatusCode(StatusCodes.Status201Created, marker);
+                if (!marker.Success) return this.StatusCode(marker.StatusCode, marker);
+                return this.StatusCode(marker.StatusCode, marker);
 
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, ServiceResult<MarkerDto>.FailResult(ex.Message));
-            }
         }
         [HttpPut]
         public async Task<IActionResult> Put(MarkerPutDto model)
         {
-            try
-            {
                 var marker = await _markerService.PutMarker(model);
-                if (!marker.Success) return this.StatusCode(StatusCodes.Status422UnprocessableEntity, marker);
-                return this.StatusCode(StatusCodes.Status200OK, marker);
+                if (!marker.Success) return this.StatusCode(marker.StatusCode, marker);
+                return this.StatusCode(marker.StatusCode, marker);
 
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, ServiceResult<MarkerDto>.FailResult(ex.Message));
-            }
         }
         [HttpGet]
         public async Task<IActionResult> GetAllMarker()
         {
-            try
-            {
                 var markers = await _markerService.GetAllMarker();
-                if (!markers.Success) return this.StatusCode(StatusCodes.Status422UnprocessableEntity, markers);
-                if (markers.Success && markers.Data.IsNullOrEmpty()) return this.StatusCode(StatusCodes.Status204NoContent, markers);
-                return this.StatusCode(StatusCodes.Status200OK, markers);
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, ServiceResult<MarkerDto>.FailResult(ex.Message));
-            }
+                if (!markers.Success) return this.StatusCode(markers.StatusCode, markers);
+                return this.StatusCode(markers.StatusCode, markers);
+
         }
         [HttpGet("{hash}")]
         public async Task<IActionResult> GetByHashMarker(Guid hash)
         {
-            try
-            {
                 var marker = await _markerService.GetByHashMarker(hash);
-                if (!marker.Success) return this.StatusCode(StatusCodes.Status422UnprocessableEntity, marker);              
-                return this.StatusCode(StatusCodes.Status200OK, marker);
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, ServiceResult<MarkerDto>.FailResult(ex.Message));
-            }
+                if (!marker.Success) return this.StatusCode(marker.StatusCode, marker);              
+                return this.StatusCode(marker.StatusCode, marker);
+
         }
         [HttpDelete("{hash}")]
         public async Task<IActionResult> DeleteMarker(Guid hash)
         {
-            try
-            {
                 var marker = await _markerService.DeleteMarker(hash);
                 if (!marker.Success) return this.StatusCode(StatusCodes.Status422UnprocessableEntity, marker);              
                 return this.StatusCode(StatusCodes.Status200OK, marker);
-            }
-            catch (Exception ex)
-            {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, ServiceResult<MarkerDto>.FailResult(ex.Message));
-            }
+
         }
 
     }

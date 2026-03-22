@@ -4,7 +4,6 @@ using CoordinateRegistration.Application.Dto.Comment;
 using CoordinateRegistration.Application.Dto.Marker;
 using CoordinateRegistration.Application.Dto.Review;
 using CoordinateRegistration.Application.Dto.TypeOccurrence;
-using CoordinateRegistration.Application.Dto.User;
 using CoordinateRegistration.Application.Interface;
 using CoordinateRegistration.Application.Interface.Authenticate;
 using CoordinateRegistration.Application.Services;
@@ -14,7 +13,6 @@ using CoordinateRegistration.Application.Validators.Comment;
 using CoordinateRegistration.Application.Validators.Marker;
 using CoordinateRegistration.Application.Validators.Review;
 using CoordinateRegistration.Application.Validators.TypeOccurrence;
-using CoordinateRegistration.Application.Validators.User;
 using CoordinateRegistration.Persistence.Context;
 using CoordinateRegistration.Persistence.Interface;
 using CoordinateRegistration.Persistence.Repositories;
@@ -24,6 +22,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using CoordinateRegistration.Application.Dto.Person;
+using CoordinateRegistration.Application.Validators.Person;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,16 +42,16 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddScoped<IAllRespository, AllRespository>();
 builder.Services.AddScoped<IMarkerService, MarkerService>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
-builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
+builder.Services.AddScoped<IPersonAuthenticationService, PersonAuthenticationService>();
 
 builder.Services.AddScoped<ITypeOccurrenceService, TypeOccurrenceService>();
 builder.Services.AddScoped<IMarkerRepository, MarkerRepository>();
 builder.Services.AddScoped<ITypeOccurrenceRespository, TypeOccurrenceRepository>();
 builder.Services.AddScoped<IMarkerTypeOccurrenceRepository, MarkerTypeOccurrenceRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
@@ -59,18 +59,18 @@ builder.Services.AddTransient<IValidator<MarkerAddDto>, MarkerAddValidator>();
 builder.Services.AddTransient<IValidator<MarkerPutDto>, MarkerPutValidator>();
 builder.Services.AddTransient<IValidator<TypeOccurrenceAddDto>, TypeOccurrenceAddValidator>();
 builder.Services.AddTransient<IValidator<TypeOccurrencePutDto>, TypeOccurrencePutValidator>();
-builder.Services.AddTransient<IValidator<UserAddDto>, UserAddValidator>();
-builder.Services.AddTransient<IValidator<UserPutDto>, UserPutValidator>();
-builder.Services.AddTransient<IValidator<UserLoginDto>, UserLoginValidator>();
-builder.Services.AddTransient<IValidator<UserDeleteDto>, UserDeleteValidator>();
-builder.Services.AddTransient<IValidator<UserRecoveryPasswordDto>, UserRecoveryPasswordValidator>();
-builder.Services.AddTransient<IValidator<UserRecoveryRequestDto>, UserRecoveryRequestValidator>();
+builder.Services.AddTransient<IValidator<PersonAddDto>, PersonAddValidator>();
+builder.Services.AddTransient<IValidator<PersonPutDto>, PersonPutValidator>();
+builder.Services.AddTransient<IValidator<PersonLoginDto>, PersonLoginValidator>();
+builder.Services.AddTransient<IValidator<PersonDeleteDto>, PersonDeleteValidator>();
+builder.Services.AddTransient<IValidator<PersonRecoveryPasswordDto>, PersonRecoveryPasswordValidator>();
+builder.Services.AddTransient<IValidator<PersonRecoveryRequestDto>, PersonRecoveryRequestValidator>();
 builder.Services.AddTransient<IValidator<ReviewAddDto>, ReviewAddValidator>();
 builder.Services.AddTransient<IValidator<ReviewPutDto>, ReviewPutValidator>();
 builder.Services.AddTransient<IValidator<CommentAddDto>, CommentAddValidator>();
 builder.Services.AddTransient<IValidator<CommentPutDto>, CommentPutValidator>();
 
-builder.Services.AddScoped<IUserAuthenticationService, UserAuthenticationService>();
+builder.Services.AddScoped<IPersonAuthenticationService, PersonAuthenticationService>();
 
 builder.Services.AddSwaggerGen(c =>
 {

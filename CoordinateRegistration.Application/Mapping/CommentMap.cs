@@ -20,8 +20,8 @@ namespace CoordinateRegistration.Application.Mapping
                .MapFrom(src => DateTime.UtcNow));
 
             CreateMap<Comment, CommentDto>()
-                .ForMember(dest => dest.UserName, opt => opt
-                .MapFrom(src => src.User.Name))
+                .ForMember(dest => dest.PersonName, opt => opt
+                .MapFrom(src => src.Person.Name))
                 .ForMember(dest => dest.MarkerHash, opt => opt
                 .MapFrom(src => src.Marker.Hash))
                 .ForMember(dest => dest.CommentHash, opt => opt

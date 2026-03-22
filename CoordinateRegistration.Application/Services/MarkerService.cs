@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CoordinateRegistration.Application.Dto;
+using CoordinateRegistration.Application.Dto.Comment;
 using CoordinateRegistration.Application.Dto.Marker;
 using CoordinateRegistration.Application.Interface;
 using CoordinateRegistration.Application.Interface.Authenticate;
@@ -17,10 +18,10 @@ namespace CoordinateRegistration.Application.Services
         private readonly IValidator<MarkerAddDto> _markerAddValidator;
         private readonly IValidator<MarkerPutDto> _markerPutValidator;
         private readonly ITypeOccurrenceRespository _typeOccurrenceRepository;
-        private readonly IUserAuthenticationService _userAuthenticatedService;
+        private readonly IPersonAuthenticationService _personAuthenticatedService;
         private readonly IMapper _mapper;
 
-        public MarkerService(IAllRespository allRepository, IMarkerRepository markerRepository, ITypeOccurrenceRespository typeOccurrenceRespository, IValidator<MarkerAddDto> markerAddValidator, IValidator<MarkerPutDto> markerPutValidator, IMapper mapper, IUserAuthenticationService userAuthenticatedService)
+        public MarkerService(IAllRespository allRepository, IMarkerRepository markerRepository, ITypeOccurrenceRespository typeOccurrenceRespository, IValidator<MarkerAddDto> markerAddValidator, IValidator<MarkerPutDto> markerPutValidator, IMapper mapper, IPersonAuthenticationService personAuthenticatedService)
         {
             _allRepository = allRepository;
             _typeOccurrenceRepository = typeOccurrenceRespository;
@@ -28,24 +29,26 @@ namespace CoordinateRegistration.Application.Services
             _markerRepository = markerRepository;
             _markerAddValidator = markerAddValidator;
             _mapper = mapper;
-            _userAuthenticatedService = userAuthenticatedService;
+            _personAuthenticatedService = personAuthenticatedService;
         }
         public async Task<ServiceResult<MarkerDto>> AddMarker(MarkerAddDto model)
         {
             try
             {
-                var userAuthenticaded = await _userAuthenticatedService.GetUserAuthenticated();
-                if (userAuthenticaded == null || userAuthenticaded.Active == false) return ServiceResult<MarkerDto>.FailResult("Você não possui autorização para realizar esta operação");
+                if (model == null) return ServiceResult<MarkerDto>.FailResult("O Json está mal formatado.", 400);
+
+                var personAuthenticaded = await _personAuthenticatedService.GetPersonAuthenticated();
+                if (personAuthenticaded == null || personAuthenticaded.Active == false) return ServiceResult<MarkerDto>.FailResult("Você não possui autorização para realizar esta operação",401);              
 
                 var resultValidator = await _markerAddValidator.ValidateAsync(model);
-                if (!resultValidator.IsValid) return ServiceResult<MarkerDto>.FailResult(resultValidator);
+                if (!resultValidator.IsValid) return ServiceResult<MarkerDto>.FailResult(resultValidator, 400);
 
                 var typeOccurrenceIds = await ValidatorTypeOccurrence(model.TypeOccurrenceHash.ToList());
-                if (typeOccurrenceIds.IsNullOrEmpty()) return ServiceResult<MarkerDto>.FailResult("Uma ou mais ocorrências informadas não existem na base de dados.");
+                if (typeOccurrenceIds.IsNullOrEmpty()) return ServiceResult<MarkerDto>.FailResult("Uma ou mais ocorrências informadas não existem na base de dados.", 404);
 
 
                 var marker = _mapper.Map<Marker>(model);
-                marker.UserId = userAuthenticaded.Id;
+                marker.PersonId = personAuthenticaded.Id;
 
                 var markerTypesOccurrences = new List<MarkerTypeOccurrence>();
 
@@ -68,13 +71,15 @@ namespace CoordinateRegistration.Application.Services
                 await _allRepository.SaveChangesAsync();
 
                 var markerReturn = await _markerRepository.GetByHash(marker.Hash);
-                return ServiceResult<MarkerDto>.SucessResult(_mapper.Map<MarkerDto>(markerReturn));
+                return ServiceResult<MarkerDto>.SucessResult(_mapper.Map<MarkerDto>(markerReturn), 201);
 
 
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                Console.WriteLine($"ERRO: {ex.Message}");
+                return ServiceResult<MarkerDto>.FailResult("Ocorreu um erro inesperado.", 500);
+
             }
 
         }
@@ -83,25 +88,26 @@ namespace CoordinateRegistration.Application.Services
 
             try
             {
-                if (hash == Guid.Empty) return ServiceResult<MarkerDto>.FailResult("O hash não foi preenchido");
+                if (hash == Guid.Empty) return ServiceResult<MarkerDto>.FailResult("O hash não foi preenchido", 400);
 
-                var userAuthenticaded = await _userAuthenticatedService.GetUserAuthenticated();
-                if (userAuthenticaded == null || userAuthenticaded.Active == false) return ServiceResult<MarkerDto>.FailResult("Você não possui autorização para realizar esta operação");
+                var personAuthenticaded = await _personAuthenticatedService.GetPersonAuthenticated();
+                if (personAuthenticaded == null || personAuthenticaded.Active == false) return ServiceResult<MarkerDto>.FailResult("Você não possui autorização para realizar esta operação", 401);
 
                 var marker = await ValidadorMarker(hash);
-                if (marker == null) return ServiceResult<MarkerDto>.FailResult("O marcador não foi encontrado na base de dados.");
+                if (marker == null) return ServiceResult<MarkerDto>.FailResult("O marcador não foi encontrado na base de dados.", 404);
 
-                if (marker.User.Id != userAuthenticaded.Id) return ServiceResult<MarkerDto>.FailResult("Você não possui autorização para realizar esta operação");
+                if (marker.Person.Id != personAuthenticaded.Id) return ServiceResult<MarkerDto>.FailResult("Você não possui autorização para realizar esta operação", 401);
 
                 _allRepository.Delete(marker);
                 await _allRepository.SaveChangesAsync();
 
-                return ServiceResult<MarkerDto>.SucessResult();
+                return ServiceResult<MarkerDto>.SucessResult(200);
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"ERRO: {ex.Message}");
+                return ServiceResult<MarkerDto>.FailResult("Ocorreu um erro inesperado.", 500);
 
-                throw new Exception(ex.Message);
             }
 
         }
@@ -109,19 +115,21 @@ namespace CoordinateRegistration.Application.Services
         {
             try
             {
-                var userAuthenticaded = await _userAuthenticatedService.GetUserAuthenticated();
-                if (userAuthenticaded == null || userAuthenticaded.Active == false) return ServiceResult<MarkerDto>.FailResult("Você não possui autorização para realizar esta operação");
+                if (model == null) return ServiceResult<MarkerDto>.FailResult("O Json está mal formatado.", 400);
+
+                var personAuthenticaded = await _personAuthenticatedService.GetPersonAuthenticated();
+                if (personAuthenticaded == null || personAuthenticaded.Active == false) return ServiceResult<MarkerDto>.FailResult("Você não possui autorização para realizar esta operação", 401);              
 
                 var result = await _markerPutValidator.ValidateAsync(model);
-                if (!result.IsValid) return ServiceResult<MarkerDto>.FailResult(result);
+                if (!result.IsValid) return ServiceResult<MarkerDto>.FailResult(result, 400);
 
                 var marker = await ValidadorMarker(model.Hash);
-                if (marker == null) return ServiceResult<MarkerDto>.FailResult("O marcador não foi encontrado na base de dados.");
+                if (marker == null) return ServiceResult<MarkerDto>.FailResult("O marcador não foi encontrado na base de dados.", 404);
 
-                if (userAuthenticaded.Id != marker.User.Id) return ServiceResult<MarkerDto>.FailResult("Você não possui autorização para realizar esta operação");
+                if (personAuthenticaded.Id != marker.Person.Id) return ServiceResult<MarkerDto>.FailResult("Você não possui autorização para realizar esta operação", 401);
 
                 var typeOccurrenceIds = await ValidatorTypeOccurrence(model.TypeOccurrenceHash.ToList());
-                if (typeOccurrenceIds.IsNullOrEmpty()) return ServiceResult<MarkerDto>.FailResult("Uma ou mais Tipo de Ocorrências informadas não existem na base de dados.");           
+                if (typeOccurrenceIds.IsNullOrEmpty()) return ServiceResult<MarkerDto>.FailResult("Uma ou mais Tipo de Ocorrências informadas não existem na base de dados.", 404);           
 
                 var markerTypesOccurrences = new List<MarkerTypeOccurrence>();
                
@@ -145,13 +153,14 @@ namespace CoordinateRegistration.Application.Services
                 await _allRepository.SaveChangesAsync();
 
                 var markerReturn = await _markerRepository.GetByHash(marker.Hash);
-                return ServiceResult<MarkerDto>.SucessResult(_mapper.Map<MarkerDto>(markerReturn));
+                return ServiceResult<MarkerDto>.SucessResult(_mapper.Map<MarkerDto>(markerReturn),200);
 
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"ERRO: {ex.Message}");
+                return ServiceResult<MarkerDto>.FailResult("Ocorreu um erro inesperado.", 500);
 
-                throw new Exception(ex.Message);
             }
 
 
@@ -160,37 +169,41 @@ namespace CoordinateRegistration.Application.Services
         {
             try
             {
-                var userAuthenticaded = await _userAuthenticatedService.GetUserAuthenticated();
-                if (userAuthenticaded == null || userAuthenticaded.Active == false) return ServiceResult<IEnumerable<MarkerDto>>.FailResult("Você não possui autorização para realizar esta operação");
+                var personAuthenticaded = await _personAuthenticatedService.GetPersonAuthenticated();
+                if (personAuthenticaded == null || personAuthenticaded.Active == false) return ServiceResult<IEnumerable<MarkerDto>>.FailResult("Você não possui autorização para realizar esta operação", 401);
 
                 var markers = await _markerRepository.GetAll();
 
-                return ServiceResult<IEnumerable<MarkerDto>>.SucessResult(_mapper.Map<IEnumerable<MarkerDto>>(markers));
+                if(markers.Count() == 0) return ServiceResult<IEnumerable<MarkerDto>>.SucessResult(_mapper.Map<IEnumerable<MarkerDto>>(markers), 204);
+
+                return ServiceResult<IEnumerable<MarkerDto>>.SucessResult(_mapper.Map<IEnumerable<MarkerDto>>(markers),200);
 
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"ERRO: {ex.Message}");
+                return ServiceResult<IEnumerable<MarkerDto>>.FailResult("Ocorreu um erro inesperado.", 500);
 
-                throw new Exception(ex.Message);
             }
         }
         public async Task<ServiceResult<MarkerDto>> GetByHashMarker(Guid hash)
         {           
             try
             {
-                if (hash == Guid.Empty) return ServiceResult<MarkerDto>.FailResult("O hash não foi preenchido");
+                if (hash == Guid.Empty) return ServiceResult<MarkerDto>.FailResult("O hash não foi preenchido", 400);
 
-                var userAuthenticaded = await _userAuthenticatedService.GetUserAuthenticated();
-                if (userAuthenticaded == null || userAuthenticaded.Active == false) return ServiceResult<MarkerDto>.FailResult("Você não possui autorização para realizar esta operação");
+                var personAuthenticaded = await _personAuthenticatedService.GetPersonAuthenticated();
+                if (personAuthenticaded == null || personAuthenticaded.Active == false) return ServiceResult<MarkerDto>.FailResult("Você não possui autorização para realizar esta operação", 401);
 
                 var marker = await ValidadorMarker(hash);
-                if(marker == null) return ServiceResult<MarkerDto>.FailResult("O marcador não foi encontrado na base de dados.");
-                return ServiceResult<MarkerDto>.SucessResult(_mapper.Map<MarkerDto>(marker));
+                if(marker == null) return ServiceResult<MarkerDto>.FailResult("O marcador não foi encontrado na base de dados.", 404);
+                return ServiceResult<MarkerDto>.SucessResult(_mapper.Map<MarkerDto>(marker), 200);
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"ERRO: {ex.Message}");
+                return ServiceResult<MarkerDto>.FailResult("Ocorreu um erro inesperado.", 500);
 
-                throw new Exception(ex.Message);
             }
 
         }
