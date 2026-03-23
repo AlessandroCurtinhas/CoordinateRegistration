@@ -25,7 +25,22 @@ using System.Text;
 using CoordinateRegistration.Application.Dto.Person;
 using CoordinateRegistration.Application.Validators.Person;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:4200")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+
+                      });
+
+});
 
 // Add services to the container.
 
@@ -153,11 +168,14 @@ using (var scope = app.Services.CreateScope())
     } 
 }
 
-        app.UseHttpsRedirection();
+app.UseHttpsRedirection();
+app.UseRouting();
 
 app.UseAuthentication();
+app.UseCors(MyAllowSpecificOrigins);
 app.UseAuthorization();
 
 app.MapControllers();
+
 
 app.Run();
