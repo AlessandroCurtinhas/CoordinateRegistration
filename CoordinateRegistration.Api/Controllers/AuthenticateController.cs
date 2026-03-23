@@ -35,12 +35,11 @@ namespace CoordinateRegistration.Controllers
 
         }
 
-        [HttpPost("/recoveryPassword")]
+        [HttpPost("/recoveryPassword/{hash}")]
         [AllowAnonymous]
-        public async Task<IActionResult> RecoveryPassword([FromBody] PersonRecoveryPasswordDto model)
+        public async Task<IActionResult> RecoveryPassword(Guid hash, [FromBody] PersonRecoveryPasswordDto model)
         {
-
-                var user = await _personAuthenticatedService.RecoveryPassword(model);
+                var user = await _personAuthenticatedService.RecoveryPassword(hash, model);
                 if (!user.Success) return this.StatusCode(user.StatusCode, user);
                 return this.StatusCode(user.StatusCode, user);
 

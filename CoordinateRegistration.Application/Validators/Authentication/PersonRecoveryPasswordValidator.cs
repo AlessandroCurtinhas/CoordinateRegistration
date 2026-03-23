@@ -22,9 +22,6 @@ namespace CoordinateRegistration.Application.Validators.Authentication
             RuleFor(person => person.ConfirmedPassword)
             .Equal(person => person.Password).WithMessage("As senhas devem ser iguais.");
 
-            RuleFor(person => person.RecoveryHash)
-            .NotEmpty().WithMessage("O hash de recuperação é obrigatório.");
-
         }
     }
 }

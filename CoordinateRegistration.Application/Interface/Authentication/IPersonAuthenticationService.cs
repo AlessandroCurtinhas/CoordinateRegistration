@@ -10,7 +10,7 @@ namespace CoordinateRegistration.Application.Interface.Authenticate
         Task<Person?> GetPersonAuthenticated();
         Task<ServiceResult<PersonAuthenticatedDto>> Login(PersonLoginDto model);
         Task<ServiceResult<PersonRecoveryRequestDto>> RecoveryPasswordRequest(PersonRecoveryRequestDto model);
-        Task<ServiceResult<PersonDto>> RecoveryPassword(PersonRecoveryPasswordDto model);
+        Task<ServiceResult<PersonDto>> RecoveryPassword(Guid? hash, PersonRecoveryPasswordDto model);
 
     }
 }

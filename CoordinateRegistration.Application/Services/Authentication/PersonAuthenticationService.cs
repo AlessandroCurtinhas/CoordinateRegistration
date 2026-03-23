@@ -119,17 +119,19 @@ public class PersonAuthenticationService : IPersonAuthenticationService
 
         }
     }
-    public async Task<ServiceResult<PersonDto>> RecoveryPassword(PersonRecoveryPasswordDto model)
+    public async Task<ServiceResult<PersonDto>> RecoveryPassword(Guid? hash, PersonRecoveryPasswordDto model)
     {
         try
         {
             if (model == null) return ServiceResult<PersonDto>.FailResult("O Json está mal formatado.", 400);
 
+            if (hash == null)  return ServiceResult<PersonDto>.FailResult("O hash deve ser informado.", 400);
+
             var personResulValidation = _personRecoveryPasswordValidator.Validate(model);
 
             if (!personResulValidation.IsValid) return ServiceResult<PersonDto>.FailResult(personResulValidation, 400);
 
-            var personResult = await _personRepository.GetByRecoveryHash(model.RecoveryHash);
+            var personResult = await _personRepository.GetByRecoveryHash(hash);
 
             if (personResult == null) return ServiceResult<PersonDto>.FailResult("O usuário não foi encontrado na base de dados.", 404);     
 
