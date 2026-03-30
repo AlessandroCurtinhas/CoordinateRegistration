@@ -5,7 +5,7 @@ namespace CoordinateRegistration.Application.Interface
 {
     public interface IMarkerService
     {
-        Task<ServiceResult<IEnumerable<MarkerDto>>> GetAllMarker();
+        Task<ServiceResult<IEnumerable<MarkerDto>>> GetAllMarker(DateTime dateStart, DateTime dateFinal);
         Task<ServiceResult<MarkerDto>> AddMarker(MarkerAddDto model);
         Task<ServiceResult<MarkerDto>> PutMarker(MarkerPutDto model);
         Task<ServiceResult<MarkerDto>> DeleteMarker(Guid hash);

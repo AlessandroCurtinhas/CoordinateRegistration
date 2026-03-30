@@ -35,10 +35,10 @@ namespace CoordinateRegistration.Controllers
                 return this.StatusCode(marker.StatusCode, marker);
 
         }
-        [HttpGet]
-        public async Task<IActionResult> GetAllMarker()
+        [HttpGet("/Markers")]
+        public async Task<IActionResult> GetAllMarker(DateTime dateStart, DateTime dateFinal)
         {
-                var markers = await _markerService.GetAllMarker();
+                var markers = await _markerService.GetAllMarker(dateStart, dateFinal);
                 if (!markers.Success) return this.StatusCode(markers.StatusCode, markers);
                 return this.StatusCode(markers.StatusCode, markers);
 

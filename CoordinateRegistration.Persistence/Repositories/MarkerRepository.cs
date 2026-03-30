@@ -14,7 +14,7 @@ namespace CoordinateRegistration.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Marker>> GetAll()
+        public async Task<IEnumerable<Marker>> GetAll(DateTime dateStart, DateTime dateFinal)
         {
             return await _context.Marker
                 .OrderByDescending(m => m.DateCreated)
@@ -22,6 +22,7 @@ namespace CoordinateRegistration.Persistence.Repositories
                 .Include(m => m.Person)
                 .Include(x => x.MarkerTypeOccurrences.Where(i => i.TypeOccurrence.Active == true))
                     .ThenInclude(x => x.TypeOccurrence)
+                .Where(x => x.DateCreated >= dateStart && x.DateCreated < dateFinal)
                 .ToListAsync();
         }
 

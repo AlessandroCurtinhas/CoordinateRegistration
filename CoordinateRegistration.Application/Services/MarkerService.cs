@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using CoordinateRegistration.Application.Dto;
-using CoordinateRegistration.Application.Dto.Comment;
 using CoordinateRegistration.Application.Dto.Marker;
 using CoordinateRegistration.Application.Interface;
 using CoordinateRegistration.Application.Interface.Authenticate;
@@ -8,6 +7,7 @@ using CoordinateRegistration.Domain;
 using CoordinateRegistration.Persistence.Interface;
 using FluentValidation;
 using Microsoft.IdentityModel.Tokens;
+using System.Linq;
 
 namespace CoordinateRegistration.Application.Services
 {
@@ -17,11 +17,12 @@ namespace CoordinateRegistration.Application.Services
         private readonly IMarkerRepository _markerRepository;
         private readonly IValidator<MarkerAddDto> _markerAddValidator;
         private readonly IValidator<MarkerPutDto> _markerPutValidator;
+        private readonly IValidator<MarkerGetDto> _markerGetValidator;
         private readonly ITypeOccurrenceRespository _typeOccurrenceRepository;
         private readonly IPersonAuthenticationService _personAuthenticatedService;
         private readonly IMapper _mapper;
 
-        public MarkerService(IAllRespository allRepository, IMarkerRepository markerRepository, ITypeOccurrenceRespository typeOccurrenceRespository, IValidator<MarkerAddDto> markerAddValidator, IValidator<MarkerPutDto> markerPutValidator, IMapper mapper, IPersonAuthenticationService personAuthenticatedService)
+        public MarkerService(IAllRespository allRepository, IMarkerRepository markerRepository, ITypeOccurrenceRespository typeOccurrenceRespository, IValidator<MarkerAddDto> markerAddValidator, IValidator<MarkerPutDto> markerPutValidator, IMapper mapper, IPersonAuthenticationService personAuthenticatedService, IValidator<MarkerGetDto> markerGetValidator)
         {
             _allRepository = allRepository;
             _typeOccurrenceRepository = typeOccurrenceRespository;
@@ -30,6 +31,7 @@ namespace CoordinateRegistration.Application.Services
             _markerAddValidator = markerAddValidator;
             _mapper = mapper;
             _personAuthenticatedService = personAuthenticatedService;
+            _markerGetValidator = markerGetValidator;
         }
         public async Task<ServiceResult<MarkerDto>> AddMarker(MarkerAddDto model)
         {
@@ -165,18 +167,29 @@ namespace CoordinateRegistration.Application.Services
 
 
         }
-        public async Task<ServiceResult<IEnumerable<MarkerDto>>> GetAllMarker()
+        public async Task<ServiceResult<IEnumerable<MarkerDto>>> GetAllMarker(DateTime dateStart, DateTime dateFinal)
         {
             try
             {
+                var dates = new MarkerGetDto
+                {
+                    dateFinal = dateFinal,
+                    dateStart = dateStart
+                };
+
+                var result = _markerGetValidator.ValidateAsync(dates);
+
+                var dateFinalFormatated = dateFinal.Date.AddDays(1);
+
                 var personAuthenticaded = await _personAuthenticatedService.GetPersonAuthenticated();
                 if (personAuthenticaded == null || personAuthenticaded.Active == false) return ServiceResult<IEnumerable<MarkerDto>>.FailResult("Você não possui autorização para realizar esta operação", 401);
 
-                var markers = await _markerRepository.GetAll();
+                var markers = await _markerRepository.GetAll(dateStart, dateFinalFormatated);
 
                 if(markers.Count() == 0) return ServiceResult<IEnumerable<MarkerDto>>.SucessResult(_mapper.Map<IEnumerable<MarkerDto>>(markers), 204);
 
-                return ServiceResult<IEnumerable<MarkerDto>>.SucessResult(_mapper.Map<IEnumerable<MarkerDto>>(markers),200);
+                var markersDto = MyMarkers(markers, personAuthenticaded);
+                return ServiceResult<IEnumerable<MarkerDto>>.SucessResult(markersDto, 200);
 
             }
             catch (Exception ex)
@@ -220,6 +233,26 @@ namespace CoordinateRegistration.Application.Services
         {
             return await _markerRepository.GetByHash(request); 
         }
+
+        private IEnumerable<MarkerDto> MyMarkers(IEnumerable<Marker> markers, Person authenticatePerson)
+        {
+            var myMarkers = markers.Where(n => n.PersonId.Equals(authenticatePerson.Id));
+            var markersDto = _mapper.Map<IEnumerable<MarkerDto>>(markers);
+
+            foreach (var marker in myMarkers)
+            {
+
+                foreach (var item in markersDto)
+                {
+                    if (item.Hash == marker.Hash) item.MyMarker = true;
+                }
+
+            }
+
+            return markersDto;
+
+        }
+
 
     }
 }

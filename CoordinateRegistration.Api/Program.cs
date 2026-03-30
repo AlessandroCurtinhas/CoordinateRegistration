@@ -72,6 +72,7 @@ builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 builder.Services.AddTransient<IValidator<MarkerAddDto>, MarkerAddValidator>();
 builder.Services.AddTransient<IValidator<MarkerPutDto>, MarkerPutValidator>();
+builder.Services.AddTransient<IValidator<MarkerGetDto>, MarkerGetValidator>();
 builder.Services.AddTransient<IValidator<TypeOccurrenceAddDto>, TypeOccurrenceAddValidator>();
 builder.Services.AddTransient<IValidator<TypeOccurrencePutDto>, TypeOccurrencePutValidator>();
 builder.Services.AddTransient<IValidator<PersonAddDto>, PersonAddValidator>();

@@ -9,6 +9,7 @@
         public int PositiveTotal { get; set; }
         public double PositivePercentual { get; set; }
         public string? PersonName { get; set; }
+        public Boolean? MyMarker { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateUpdated { get; set; }
         public IEnumerable<MarkerDtoTypeOccurrence> TypeOcurrences { get; set; }
