@@ -41,7 +41,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<IEnumerable<TypeOccurrenceDto>>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<IEnumerable<TypeOccurrenceDto>>.FailResult("Ocorreu um erro inesperado ao carregar os tipos de ocorrência. Tente novamente mais tarde.", 500);
             }
         }
         public async Task<ServiceResult<IEnumerable<TypeOccurrenceDtoPerson>>> GetAllTypeOccurrenceFilter()
@@ -59,7 +59,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<IEnumerable<TypeOccurrenceDtoPerson>>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<IEnumerable<TypeOccurrenceDtoPerson>>.FailResult("Ocorreu um erro inesperado ao carregar os tipos de ocorrência. Tente novamente mais tarde.", 500);
             }
         }
         public async Task<ServiceResult<IEnumerable<TypeOccurrenceDto>>> PostTypeOccurrences(IEnumerable<TypeOccurrenceAddDto> model)
@@ -103,7 +103,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<IEnumerable<TypeOccurrenceDto>>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<IEnumerable<TypeOccurrenceDto>>.FailResult("Ocorreu um erro inesperado ao criar um tipo de ocorrência. Tente novamente mais tarde.", 500);
             }
         }
         public async Task<ServiceResult<TypeOccurrenceDto>> DeleteTypeOccurrence(Guid hash)
@@ -127,7 +127,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<TypeOccurrenceDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<TypeOccurrenceDto>.FailResult("Ocorreu um erro inesperado ao excluir uma ocorrência. Tente novamente mais tarde.", 500);
             }
 
         }
@@ -147,7 +147,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<TypeOccurrenceDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<TypeOccurrenceDto>.FailResult("Ocorreu um erro inesperado ao carregar um tipo de ocorrência. Tente novamente mais tarde.", 500);
             }
 
         }
@@ -188,7 +188,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<TypeOccurrenceDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<TypeOccurrenceDto>.FailResult("Ocorreu um erro inesperado ao atualizar um tipo de ocorrência. Tente novamente mais tarde.", 500);
             }
 
         }

@@ -66,7 +66,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<ReviewDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<ReviewDto>.FailResult("Ocorreu um erro inesperado ao adicionar uma revisão. Tente novamente mais tarde.", 500);
             }
         }
         public async Task<ServiceResult<ReviewDto>> PutReview(ReviewPutDto model)
@@ -97,7 +97,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<ReviewDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<ReviewDto>.FailResult("Ocorreu um erro inesperado ao atualizar uma revisão. Tente novamente mais tarde.", 500);
             }
         }
         public async Task<ServiceResult<ReviewDto>> GetReview(Guid hashReview)
@@ -119,7 +119,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<ReviewDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<ReviewDto>.FailResult("Ocorreu um erro inesperado ao carregar uma revisão. Tente novamente mais tarde.", 500);
             }
         }
 
@@ -141,7 +141,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<ReviewDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<ReviewDto>.FailResult("Ocorreu um erro inesperado ao carregar uma revisão. Tente novamente mais tarde.", 500);
             }
         }
 
@@ -168,7 +168,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<ReviewDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<ReviewDto>.FailResult("Ocorreu um erro inesperado ao excluir uma revisão. Tente novamente mais tarde.", 500);
             }
         }
     }

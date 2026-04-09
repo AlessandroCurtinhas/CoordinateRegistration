@@ -9,7 +9,7 @@
         public string Email { get; set; }
         public string Password { get; set; }
         public DateTime? PasswordDateRequest { get; set; }
-        public Guid? RecoveryHash { get; set; }
+        public string? RecoveryHash { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateUpdated { get; set; }
         public DateTime? DateDeleted { get; set; }

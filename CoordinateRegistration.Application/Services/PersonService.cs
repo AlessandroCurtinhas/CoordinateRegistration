@@ -69,7 +69,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<PersonDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<PersonDto>.FailResult("Ocorreu um erro inesperado ao criar um usuário. Tente novamente mais tarde.", 500);
             }
         }
         public async Task<ServiceResult<PersonDto>> PutPerson(PersonPutDto model)
@@ -101,7 +101,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<PersonDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<PersonDto>.FailResult("Ocorreu um erro inesperado ao atualizar um usuário. Tente novamente mais tarde.", 500);
             }
         }
         public async Task<ServiceResult<PersonDto>> GetPersonByEmail(string model)
@@ -119,7 +119,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<PersonDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<PersonDto>.FailResult("Ocorreu um erro inesperado ao carregar um usuário. Tente novamente mais tarde.", 500);
             }
 
         }
@@ -153,7 +153,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<PersonDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<PersonDto>.FailResult("Ocorreu um erro inesperado ao deletar um usuário. Tente novamente mais tarde.", 500);
             }
 
 
@@ -188,7 +188,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<PersonDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<PersonDto>.FailResult("Ocorreu um erro inesperado ao excluir um usuário. Tente novamente mais tarde.", 500);
             }
         }
 

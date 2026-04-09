@@ -30,6 +30,9 @@ namespace CoordinateRegistration.Persistence.Mappings
                    .IsRequired()
                    .HasMaxLength(150);
 
+            builder.Property(x => x.RecoveryHash)
+                   .HasMaxLength(150);
+
             builder.Property(x => x.DateCreated)
                    .HasColumnType("SmallDatetime");
 
@@ -42,8 +45,7 @@ namespace CoordinateRegistration.Persistence.Mappings
             builder.HasIndex(x => x.Hash)
                    .IsUnique();
 
-            builder.HasIndex(x => x.RecoveryHash)
-                   .IsUnique();
+            builder.HasIndex(x => x.RecoveryHash);
 
             builder.HasIndex(x => x.Email)
                    .IsUnique();

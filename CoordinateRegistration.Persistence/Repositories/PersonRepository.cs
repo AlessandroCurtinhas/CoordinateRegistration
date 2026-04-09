@@ -36,7 +36,7 @@ namespace CoordinateRegistration.Persistence.Repositories
                 .FirstOrDefaultAsync(u => u.Email.Equals(email) && u.Password.Equals(password) && u.Active == true);
         }
 
-        public async Task<Person> GetByRecoveryHash(Guid? recoveryHash)
+        public async Task<Person> GetByRecoveryHash(string? recoveryHash)
         {
             return await _context.Person
                 .AsNoTracking()

@@ -16,6 +16,16 @@ namespace CoordinateRegistration.Application.Dto
             return new ServiceResult<T> { Success = true, Data = data, Message = new List<string> {"Operação concluída com sucesso."}, StatusCode = statusCode };
         }
 
+        public static ServiceResult<T> SucessResult(string message, int statusCode)
+        {
+
+            var messages = new List<string>();
+            messages.Add("Operação concluída com sucesso.");
+            messages.Add(message);
+
+            return new ServiceResult<T> { Success = true, Message = messages, StatusCode = statusCode };
+        }
+
         public static ServiceResult<T> SucessResult(int statusCode)
         {
             return new ServiceResult<T> { Success = true, Message = new List<string> {"Operação concluída com sucesso."}, StatusCode = statusCode };

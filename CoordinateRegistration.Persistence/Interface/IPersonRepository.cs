@@ -7,6 +7,6 @@ namespace CoordinateRegistration.Persistence.Interface
         Task<Person> GetByEmail(string email);
         Task<Person> GetByHash(Guid hash);
         Task<Person> GetByEmailPassword(string email, string password);
-        Task<Person> GetByRecoveryHash(Guid? recoveryHash);
+        Task<Person> GetByRecoveryHash(string? recoveryHash);
     }
 }

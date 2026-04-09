@@ -60,7 +60,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<CommentDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<CommentDto>.FailResult("Ocorreu um erro inesperado ao salvar o comentário. Tente novamente mais tarde.", 500);
 
             }
         }
@@ -102,7 +102,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<CommentDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<CommentDto>.FailResult("Ocorreu um erro inesperado ao atualizar o comentário. Tente novamente mais tarde.", 500);
 
             }
         }
@@ -127,7 +127,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<IEnumerable<CommentDto>>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<IEnumerable<CommentDto>>.FailResult("Ocorreu um erro inesperado ao carregar os comentários. Tente novamente mais tarde.", 500);
 
             }
 
@@ -156,7 +156,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<CommentDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<CommentDto>.FailResult("Ocorreu um erro inesperado ao excluir um comentário. Tente novamente mais tarde.", 500);
 
             }
         }

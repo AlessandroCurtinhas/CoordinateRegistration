@@ -85,7 +85,7 @@ public class PersonAuthenticationService : IPersonAuthenticationService
         catch (Exception ex)
         {
             Console.WriteLine($"ERRO: {ex.Message}");
-            return ServiceResult<PersonAuthenticatedDto>.FailResult("Ocorreu um erro inesperado.", 500);
+            return ServiceResult<PersonAuthenticatedDto>.FailResult("Ocorreu um erro inesperado ao realizar o login. Tente novamente mais tarde.", 500);
 
         }
 
@@ -104,18 +104,18 @@ public class PersonAuthenticationService : IPersonAuthenticationService
             if (personResult == null || personResult.Active == null) return ServiceResult<PersonRecoveryRequestDto>.SucessResult(200);
 
             personResult.PasswordDateRequest = DateTime.UtcNow;
-            personResult.RecoveryHash = Guid.NewGuid();
+            personResult.RecoveryHash = Guid.NewGuid().ToString();
 
             //implementar envio de email
             _allRepository.Update(personResult);
             await _allRepository.SaveChangesAsync();
 
-            return ServiceResult<PersonRecoveryRequestDto>.SucessResult(200);
+            return ServiceResult<PersonRecoveryRequestDto>.SucessResult("Você receberá um e-mail em instantes com link para criação de uma nova senha.",200);
         }
         catch (Exception ex)
         {
             Console.WriteLine($"ERRO: {ex.Message}");
-            return ServiceResult<PersonRecoveryRequestDto>.FailResult("Ocorreu um erro inesperado.", 500);
+            return ServiceResult<PersonRecoveryRequestDto>.FailResult("Ocorreu um erro inesperado ao tentar solicitar a recuperação de senha. Tente novamente mais tarde.", 500);
 
         }
     }
@@ -131,7 +131,7 @@ public class PersonAuthenticationService : IPersonAuthenticationService
 
             if (!personResulValidation.IsValid) return ServiceResult<PersonDto>.FailResult(personResulValidation, 400);
 
-            var personResult = await _personRepository.GetByRecoveryHash(hash);
+            var personResult = await _personRepository.GetByRecoveryHash(hash.ToString());
 
             if (personResult == null) return ServiceResult<PersonDto>.FailResult("O usuário não foi encontrado na base de dados.", 404);     
 
@@ -157,7 +157,7 @@ public class PersonAuthenticationService : IPersonAuthenticationService
         catch (Exception ex)
         {
             Console.WriteLine($"ERRO: {ex.Message}");
-            return ServiceResult<PersonDto>.FailResult("Ocorreu um erro inesperado.", 500);
+            return ServiceResult<PersonDto>.FailResult("Ocorreu um erro inesperado ao realizar troca da senha. Tente novamente mais tarde.", 500);
 
         }
 

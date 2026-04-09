@@ -80,7 +80,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<MarkerDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<MarkerDto>.FailResult("Ocorreu um erro inesperado ao criar um marcador. Tente novamente mais tarde.", 500);
 
             }
 
@@ -108,7 +108,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<MarkerDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<MarkerDto>.FailResult("Ocorreu um erro inesperado ao excluir um marcador. Tente novamente mais tarde.", 500);
 
             }
 
@@ -161,7 +161,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<MarkerDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<MarkerDto>.FailResult("Ocorreu um erro inesperado ao atualizar um marcador. Tente novamente mais tarde.", 500);
 
             }
 
@@ -195,7 +195,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<IEnumerable<MarkerDto>>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<IEnumerable<MarkerDto>>.FailResult("Ocorreu um erro inesperado ao carregar os marcadores. Tente novamente mais tarde.", 500);
 
             }
         }
@@ -215,7 +215,7 @@ namespace CoordinateRegistration.Application.Services
             catch (Exception ex)
             {
                 Console.WriteLine($"ERRO: {ex.Message}");
-                return ServiceResult<MarkerDto>.FailResult("Ocorreu um erro inesperado.", 500);
+                return ServiceResult<MarkerDto>.FailResult("Ocorreu um erro inesperado ao carregar um marcador. Tente novamente mais tarde.", 500);
 
             }
 
