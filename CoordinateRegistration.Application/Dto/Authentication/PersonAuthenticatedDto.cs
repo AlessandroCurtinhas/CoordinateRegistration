@@ -1,4 +1,6 @@
-﻿namespace CoordinateRegistration.Application.Dto.Authentication
+﻿using CoordinateRegistration.Application.Dto.Person;
+
+namespace CoordinateRegistration.Application.Dto.Authentication
 {
     public class PersonAuthenticatedDto
     {
@@ -6,5 +8,6 @@
         public string? Name { get; set; }
         public string? Email { get; set; }
         public string? AuthToken { get; set; }
+        public IEnumerable<PersonCityDto> Cities { get; set; }
     }
 }

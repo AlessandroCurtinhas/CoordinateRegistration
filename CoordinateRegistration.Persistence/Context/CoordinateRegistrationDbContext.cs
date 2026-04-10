@@ -14,6 +14,7 @@ namespace CoordinateRegistration.Persistence.Context
         public DbSet<Comment> Comment { get; set; }
         public DbSet<ProfileUsr> ProfileUsr { get; set; }
         public DbSet<PersonProfile> PersonProfile { get; set; }
+        public DbSet<PersonCity> PersonCity { get; set; }
         
 
         public CoordinateRegistrationDbContext(DbContextOptions<CoordinateRegistrationDbContext> options)
@@ -27,6 +28,7 @@ namespace CoordinateRegistration.Persistence.Context
             modelBuilder.ApplyConfiguration(new CommentMap());
             modelBuilder.ApplyConfiguration(new ReviewMap());
             modelBuilder.ApplyConfiguration(new ProfileUsrMap());
+            modelBuilder.ApplyConfiguration(new PersonCityMap());
 
             modelBuilder.Entity<ProfileUsr>().HasData(
             new ProfileUsr { Id = 1, Hash = Guid.NewGuid(), Name = "Admin" },

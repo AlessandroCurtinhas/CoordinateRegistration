@@ -14,5 +14,6 @@
         public DateTime? DateUpdated { get; set; }
         public DateTime? DateDeleted { get; set; }
         public IEnumerable<PersonProfile> Profile { get; set; }
+        public IEnumerable<PersonCity> Cities { get; set; }
     }
 }

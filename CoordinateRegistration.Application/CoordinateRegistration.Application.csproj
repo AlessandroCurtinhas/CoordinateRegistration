@@ -7,6 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Dto\NovaPasta\**" />
+    <EmbeddedResource Remove="Dto\NovaPasta\**" />
+    <None Remove="Dto\NovaPasta\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Dto\Authentication\UserRecoveryPasswordResponse.cs" />
   </ItemGroup>
 
