@@ -9,7 +9,10 @@ namespace CoordinateRegistration.Application.Mapping
     {
         public PersonMap() 
         {
-            CreateMap<Person, PersonDto>();
+            CreateMap<Person, PersonDto>()
+                .ForMember(e => e.Cities, opts => opts
+                .MapFrom(e => e.Cities.Select(e => new PersonCityDto { Hash = e.Hash, Name = e.Name, State = e.State, UF = e.UF }))); 
+
             CreateMap<Person, PersonAuthenticatedDto>()
                 .ForMember(e => e.Cities, opts => opts
                 .MapFrom(e => e.Cities.Select(e => new PersonCityDto { Hash = e.Hash, Name = e.Name, State = e.State, UF = e.UF })));

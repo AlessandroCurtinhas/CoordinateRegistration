@@ -7,5 +7,6 @@
         public string Email { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime? DateUpdated { get; set; }
+        public IEnumerable<PersonCityDto> Cities { get; set; }
     }
 }

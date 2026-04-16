@@ -16,10 +16,9 @@ namespace CoordinateRegistration.Application.Validators.Authentication
             .Matches("[0-9]").WithMessage("A senha deve conter pelo menos um número.")
             .Matches("[^a-zA-Z0-9]").WithMessage("A senha deve conter pelo menos um caractere especial.");
 
-            RuleFor(person => person.Password)
-             .NotEmpty().WithMessage("A confirmação da senha é obrigatória.");
 
             RuleFor(person => person.ConfirmedPassword)
+            .NotEmpty().WithMessage("A confirmação de senha é obrigatória.")
             .Equal(person => person.Password).WithMessage("As senhas devem ser iguais.");
 
         }

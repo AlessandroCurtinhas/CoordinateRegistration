@@ -23,6 +23,7 @@ namespace CoordinateRegistration.Persistence.Repositories
         {
             return await _context.Person
                 .AsNoTracking()
+                .Include(x => x.Cities)
                 .Include(x => x.Profile)
                 .ThenInclude(x => x.Profile)
                 .FirstOrDefaultAsync(x => x.Hash == hash);

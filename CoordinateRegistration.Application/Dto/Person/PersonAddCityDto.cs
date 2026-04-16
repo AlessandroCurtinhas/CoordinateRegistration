@@ -8,8 +8,8 @@ namespace CoordinateRegistration.Application.Dto.Person
 {
     public class PersonAddCityDto
     {
-        public string Name { get; set; }
-        public string State { get; set; }
-        public string UF { get; set; }
+        public string? Name { get; set; }
+        public string? State { get; set; }
+        public string? UF { get; set; }
     }
 }
