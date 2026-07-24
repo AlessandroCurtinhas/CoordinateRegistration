@@ -13,7 +13,7 @@ namespace CoordinateRegistration.Persistence.Migrations
 {
     [DbContext(typeof(CoordinateRegistrationDbContext))]
     [Migration("20260226030529_init")]
-    partial class init
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
