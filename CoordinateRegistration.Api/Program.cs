@@ -159,14 +159,28 @@ if (app.Environment.IsDevelopment())
 }
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider; 
-    try 
-    { var context = services.GetRequiredService<CoordinateRegistrationDbContext>(); context.Database.Migrate(); 
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<CoordinateRegistrationDbContext>();
+
+    int maxRetries = 3;
+    int delaySeconds = 5;
+
+    for (int attempt = 1; attempt <= maxRetries; attempt++)
+    {
+        try
+        {
+            await context.Database.MigrateAsync();
+
+        }
+        catch (Exception ex)
+        {
+            if (attempt == maxRetries) throw; // Estouro o limite, repassa o erro
+
+            var logger = services.GetRequiredService<ILogger<Program>>(); logger.LogError(ex, "Ocorreu um erro ao aplicar as migrações.");
+
+            await Task.Delay(TimeSpan.FromSeconds(delaySeconds));
+        }
     }
-    catch (Exception ex)
-    { // Log qualquer erro ocorrido durante a migração
-      var logger = services.GetRequiredService<ILogger<Program>>(); logger.LogError(ex, "Ocorreu um erro ao aplicar as migrações."); 
-    } 
 }
 
 app.UseHttpsRedirection();
