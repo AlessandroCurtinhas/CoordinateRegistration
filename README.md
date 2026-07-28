@@ -17,3 +17,11 @@ Tecnologias, conceitos e metodologias utilizadas:
 - Autenticação de usuários via token JWT e configuração de roles;
 - Uso do SOLID, buscando separar as responsabilidades no sistema;
 - Uso de validators.
+
+
+Como rodar o projeto?
+
+Via docker utilizando o comando "docker-compose up" na raiz do projeto
+
+A api ficará disponível em localhost:8080
+O banco ficará diponível em localhost:1433
